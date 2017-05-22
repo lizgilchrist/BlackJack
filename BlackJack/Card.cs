@@ -30,6 +30,12 @@ namespace BlackJack
             Suit = suit;
             Face = face;
         }
+
+        public override string ToString()
+        {
+            // TODO: Return a nicely formatted version of card, e.g. if this card's Face is Ten and Suit is Diamonds, return "10 ♦"
+            return base.ToString();
+        }
     }
 }
 

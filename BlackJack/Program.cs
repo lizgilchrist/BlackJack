@@ -27,7 +27,7 @@ namespace BlackJack
             Hand lizHand = new Hand();
             lizHand.AddCard(deck.GetNextCard());
             lizHand.AddCard(deck.GetNextCard());
-            lizHand.GetCards();
+            PrintHand("Liz", lizHand);
             
             
                 
@@ -42,7 +42,7 @@ namespace BlackJack
             Hand dealer = new Hand();
             dealer.AddCard(deck.GetNextCard());
             dealer.AddCard(deck.GetNextCard());
-            dealer.GetCards();
+            PrintHand("Dealer", dealer);
             //Console.WriteLine("Dealer's hand is " 10♦ and one face-down card ); 
             //Console.WriteLine(cardTotal); 
             //Compare cardTotal to 21 return whatever gets them closest to 21.
@@ -59,6 +59,21 @@ namespace BlackJack
 
 
 
+        }
+
+        private static void PrintHand(string playerName, Hand hand)
+        {
+            string result = $"{playerName}'s hand is: ";
+            IEnumerable<Card> cards = hand.GetCards();
+            if (cards.Count() == 0)
+            {
+                result += "empty";
+            }
+            else
+            {
+                result += string.Join(", ", cards);
+            }
+            Console.WriteLine(result);
         }
     }
 }
