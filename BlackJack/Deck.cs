@@ -12,7 +12,7 @@ namespace BlackJack
 
         public Card GetNextCard()
         {
-            return new Card((Suit)RandomCard.Next(1, 4), RandomCard.Next(1, 13));
+            return new Card((Suit)RandomCard.Next(1, 4),(Face)RandomCard.Next(1, 13));
         }
 
     }

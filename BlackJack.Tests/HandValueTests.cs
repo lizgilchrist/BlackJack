@@ -14,7 +14,7 @@ namespace BlackJack.Tests
         public void TestHandValue()
         {
             Hand hand = new Hand();
-            hand.AddCard(new Card(Suit.Clubs, 12));
+            hand.AddCard(new Card(Suit.Clubs, Face.Queen));
             Assert.Equal(10, hand.Value);
         }
 
@@ -22,7 +22,7 @@ namespace BlackJack.Tests
         public void TestHandValueNumberCard()
         {
             Hand hand = new Hand();
-            hand.AddCard(new Card(Suit.Hearts, 6));
+            hand.AddCard(new Card(Suit.Hearts, Face.Six));
             Assert.Equal(6, hand.Value);
         }
 
@@ -30,8 +30,8 @@ namespace BlackJack.Tests
         public void TestHandValueMultiple()
         {
             Hand hand = new Hand();
-            hand.AddCard(new Card(Suit.Diamonds, 6));
-            hand.AddCard(new Card(Suit.Clubs, 12));
+            hand.AddCard(new Card(Suit.Diamonds, Face.Six));
+            hand.AddCard(new Card(Suit.Clubs, Face.Queen));
             Assert.Equal(16, hand.Value);
         }
 
@@ -39,7 +39,7 @@ namespace BlackJack.Tests
         public void TestHandVauleAce()
         {
             Hand hand = new Hand();
-            hand.AddCard(new Card(Suit.Clubs, 1));
+            hand.AddCard(new Card(Suit.Clubs, Face.Ace));
             Assert.Equal(11, hand.Value);
         }
 
@@ -47,8 +47,8 @@ namespace BlackJack.Tests
         public void TestHandValueTwoAces()
         {
             Hand hand = new Hand();
-            hand.AddCard(new Card(Suit.Diamonds, 1));
-            hand.AddCard(new Card(Suit.Hearts, 1));
+            hand.AddCard(new Card(Suit.Diamonds, Face.Ace));
+            hand.AddCard(new Card(Suit.Hearts, Face.Ace));
             Assert.Equal(12, hand.Value);
         }
 
@@ -56,9 +56,9 @@ namespace BlackJack.Tests
         public void TestHandMultipleAndAce()
         {
             Hand hand = new Hand();
-            hand.AddCard(new Card(Suit.Diamonds, 1));
-            hand.AddCard(new Card(Suit.Hearts, 6));
-            hand.AddCard(new Card(Suit.Hearts, 11));
+            hand.AddCard(new Card(Suit.Diamonds, Face.Ace));
+            hand.AddCard(new Card(Suit.Hearts, Face.Six));
+            hand.AddCard(new Card(Suit.Hearts, Face.Jack));
             Assert.Equal(17, hand.Value);
         }
     }

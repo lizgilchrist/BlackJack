@@ -10,7 +10,7 @@ namespace BlackJack
     {
         public Suit Suit { get; set; }
 
-        public int ValueId { get; set; }
+        public Face Face { get; set; }
 
         /*public string Value
         {
@@ -20,15 +20,15 @@ namespace BlackJack
             }
         }
         */
-        public Card(Suit suit, int valueId)
+        public Card(Suit suit, Face face)
         {
-            if (valueId > 13 || valueId < 1)
+            if (face > Face.King || face < Face.Ace)
             {
-                throw new ArgumentOutOfRangeException(nameof(valueId));
+                throw new ArgumentOutOfRangeException(nameof(face));
             }
             
             Suit = suit;
-            ValueId = valueId;
+            Face = face;
         }
     }
 }

@@ -17,14 +17,19 @@ namespace BlackJack
             _cards = new List<Card>();
         }
 
+        public IEnumerable<Card> GetCards()
+        {
+            return _cards; 
+        }
+        
         public int Value
         {
             get
             {
                 int cardTotal = 0;
-                foreach (Card card in _cards.OrderByDescending(c => c.ValueId)) //OrderBy descending to consider the Ace (1) last after all other cards.
+                foreach (Card card in _cards.OrderByDescending(c => c.Face)) //OrderBy descending to consider the Ace (1) last after all other cards.
                 {
-                    if (card.ValueId == 1)
+                    if (card.Face == Face.Ace)
                     {
                         if (cardTotal < 11)
                         {
@@ -35,13 +40,13 @@ namespace BlackJack
                             cardTotal += 1;
                         } 
                     }
-                    else if (card.ValueId == 11 || card.ValueId == 12 || card.ValueId == 13)
+                    else if (card.Face == Face.Jack || card.Face == Face.Queen || card.Face == Face.King)
                     {
                         cardTotal += 10;
                     }
                     else
                     {
-                        cardTotal += card.ValueId;
+                        cardTotal += (int)card.Face;
                     }
                 }
                 return cardTotal;
@@ -54,7 +59,6 @@ namespace BlackJack
             {
                 throw new InvalidOperationException("Card has already been added to a hand");
             }
-
             __allCards.Add(card);
             _cards.Add(card);
         }

@@ -22,17 +22,43 @@ namespace BlackJack
         {
             //Create a new Deck and print out the result of GetNextCard
             Deck deck = new Deck();
-            Card card = deck.GetNextCard();
+            //Card card = deck.GetNextCard();
             
             Hand lizHand = new Hand();
-            lizHand.AddCard(card);
-            int value = lizHand.Value;
+            lizHand.AddCard(deck.GetNextCard());
+            lizHand.AddCard(deck.GetNextCard());
+            lizHand.GetCards();
+            
+            
+                
+          
+            
+            //Console.WriteLine("Liz's hand is ");
+            //4♣ Q♦
+            //Console.WriteLine(cardTotal); 
+            //Compare cardTotal to 21 retrun whatever gets them closest to 21.
+            //Hit or Stay?
+
+            Hand dealer = new Hand();
+            dealer.AddCard(deck.GetNextCard());
+            dealer.AddCard(deck.GetNextCard());
+            dealer.GetCards();
+            //Console.WriteLine("Dealer's hand is " 10♦ and one face-down card ); 
+            //Console.WriteLine(cardTotal); 
+            //Compare cardTotal to 21 return whatever gets them closest to 21.
+            //Hit or Stay?
+
+            //int value = lizHand.Value;
             // Add card to hand here
 
-            Stack<Card> cards = new Stack<Card>();
-            Stack<Card> someOtherCards = new Stack<Card>();
-            cards.Push(card);
-           
+            //"♣ ♦ ♥ ♠"
+
+            //Stack<Card> cards = new Stack<Card>();
+            //Stack<Card> someOtherCards = new Stack<Card>();
+            //cards.Push(card);
+
+
+
         }
     }
 }
