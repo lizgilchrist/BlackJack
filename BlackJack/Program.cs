@@ -16,6 +16,7 @@ namespace BlackJack
     //Insurance: When the dealers upcard is an Ace - A player can 'take insurance' against the chance that the dealer has blackjack.
     //Push: If the dealer and the player come up with the same total - it's a tie
     //Payouts:
+    //"♣ ♦ ♥ ♠"
     class Program
     {
         static void Main(string[] args)
@@ -23,41 +24,53 @@ namespace BlackJack
             //Create a new Deck and print out the result of GetNextCard
             Deck deck = new Deck();
             //Card card = deck.GetNextCard();
-            
+
             Hand lizHand = new Hand();
             lizHand.AddCard(deck.GetNextCard());
             lizHand.AddCard(deck.GetNextCard());
             PrintHand("Liz", lizHand);
-            
-            
-                
-          
-            
-            //Console.WriteLine("Liz's hand is ");
-            //4♣ Q♦
-            //Console.WriteLine(cardTotal); 
-            //Compare cardTotal to 21 retrun whatever gets them closest to 21.
+
+            Console.WriteLine("The total for Liz's hand is " + lizHand.Value);
+            //Compare cardTotal to 21 return whatever gets them closest to 21.
             //Hit or Stay?
+
+
+            //If equal to 21 then highly likely the player has won or maybe draw with dealer.
+            while (lizHand.Value < 21)
+            {
+                Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
+                string userInput = Console.ReadLine();
+
+                if (userInput == "Hit")
+                {
+                    lizHand.AddCard(deck.GetNextCard());
+                    PrintHand("Liz", lizHand);
+                    Console.WriteLine("The total for Liz's hand now is " + lizHand.Value);
+                }
+                else if (userInput == "Stay")
+                {
+                    Console.WriteLine("The Total for Liz's hand stays as " + lizHand.Value);
+                    break;
+                }
+                
+            }
+
+            //If card value goes over 21 after a hit - Console.WriteLine("BUST! Sorry you lose");
+            //Compare with the dealers total to decide who has won. Closest to 21 wins.
 
             Hand dealer = new Hand();
             dealer.AddCard(deck.GetNextCard());
             dealer.AddCard(deck.GetNextCard());
             PrintHand("Dealer", dealer);
-            //Console.WriteLine("Dealer's hand is " 10♦ and one face-down card ); 
-            //Console.WriteLine(cardTotal); 
+            
+            Console.WriteLine("The total for Dealer's hand is " + dealer.Value);
             //Compare cardTotal to 21 return whatever gets them closest to 21.
             //Hit or Stay?
-
-            //int value = lizHand.Value;
-            // Add card to hand here
-
-            //"♣ ♦ ♥ ♠"
+            
 
             //Stack<Card> cards = new Stack<Card>();
             //Stack<Card> someOtherCards = new Stack<Card>();
             //cards.Push(card);
-
-            
 
         }
 
@@ -80,7 +93,7 @@ namespace BlackJack
             }
             Console.WriteLine(result);
         }
-        // TODO: Return a nicely formatted version of card, e.g. if this card's Face is Ten and Suit is Diamonds, return "10 ♦"
+       
         private static string GetCardString(Card card)
         {
             string suit = null;
@@ -156,8 +169,8 @@ namespace BlackJack
             {
                 face = "K";
             }
+
             return String.Format("{0} {1}", face, suit);
-            
         }
     }
 }
