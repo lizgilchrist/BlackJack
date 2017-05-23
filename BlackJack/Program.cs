@@ -57,7 +57,7 @@ namespace BlackJack
             //Stack<Card> someOtherCards = new Stack<Card>();
             //cards.Push(card);
 
-
+            
 
         }
 
@@ -80,12 +80,84 @@ namespace BlackJack
             }
             Console.WriteLine(result);
         }
-
+        // TODO: Return a nicely formatted version of card, e.g. if this card's Face is Ten and Suit is Diamonds, return "10 ♦"
         private static string GetCardString(Card card)
         {
-            // TODO: Return a nicely formatted version of card, e.g. if this card's Face is Ten and Suit is Diamonds, return "10 ♦"
+            string suit = null;
 
-            return card.ToString();
+            if (card.Suit == Suit.Clubs)
+            {   
+                suit = "♣";
+            }
+            else if (card.Suit == Suit.Diamonds)
+            {
+                suit = "♦";
+            }   
+            else if (card.Suit == Suit.Hearts)
+            {
+                suit = "♥";
+            }
+            else if (card.Suit == Suit.Spades)
+            {
+                suit = "♠";
+            }
+
+            string face = null;
+
+            if (card.Face == Face.Ace)
+            {
+                face = "A";
+            }
+            else if (card.Face == Face.Two)
+            {
+                face = "2";
+            }
+            else if (card.Face == Face.Three)
+            {
+                face = "3";
+            }
+            else if (card.Face == Face.Four)
+            {
+                face = "4";
+            }
+            else if (card.Face == Face.Five)
+            {
+                face = "5";
+            }
+            else if (card.Face == Face.Six)
+            {
+                face = "6";
+            }
+            else if (card.Face == Face.Seven)
+            {
+                face = "7";
+            }
+            else if (card.Face == Face.Eight)
+            {
+                face = "8";
+            }
+            else if (card.Face == Face.Nine)
+            {
+                face = "9";
+            }
+            else if (card.Face == Face.Ten)
+            {
+                face = "10";
+            }
+            else if (card.Face == Face.Jack)
+            {
+                face = "J";
+            }
+            else if (card.Face == Face.Queen)
+            {
+                face = "Q";
+            }
+            else if (card.Face == Face.King)
+            {
+                face = "K";
+            }
+            return String.Format("{0} {1}", face, suit);
+            
         }
     }
 }
