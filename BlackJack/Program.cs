@@ -21,6 +21,8 @@ namespace BlackJack
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
+
             //Create a new Deck and print out the result of GetNextCard
             Deck deck = new Deck();
             //Card card = deck.GetNextCard();
@@ -36,7 +38,7 @@ namespace BlackJack
 
 
             //If equal to 21 then highly likely the player has won or maybe draw with dealer.
-            while (lizHand.Value < 21)
+            while (!lizHand.IsBust)
             {
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
                 string userInput = Console.ReadLine();
@@ -117,57 +119,13 @@ namespace BlackJack
 
             string face = null;
 
-            if (card.Face == Face.Ace)
+            if (card.Face == Face.Ace || card.Face == Face.Jack || card.Face == Face.Queen || card.Face == Face.King)
             {
-                face = "A";
+                face = card.Face.ToString().First().ToString();
             }
-            else if (card.Face == Face.Two)
+            else
             {
-                face = "2";
-            }
-            else if (card.Face == Face.Three)
-            {
-                face = "3";
-            }
-            else if (card.Face == Face.Four)
-            {
-                face = "4";
-            }
-            else if (card.Face == Face.Five)
-            {
-                face = "5";
-            }
-            else if (card.Face == Face.Six)
-            {
-                face = "6";
-            }
-            else if (card.Face == Face.Seven)
-            {
-                face = "7";
-            }
-            else if (card.Face == Face.Eight)
-            {
-                face = "8";
-            }
-            else if (card.Face == Face.Nine)
-            {
-                face = "9";
-            }
-            else if (card.Face == Face.Ten)
-            {
-                face = "10";
-            }
-            else if (card.Face == Face.Jack)
-            {
-                face = "J";
-            }
-            else if (card.Face == Face.Queen)
-            {
-                face = "Q";
-            }
-            else if (card.Face == Face.King)
-            {
-                face = "K";
+                face = ((int)card.Face).ToString();
             }
 
             return String.Format("{0} {1}", face, suit);

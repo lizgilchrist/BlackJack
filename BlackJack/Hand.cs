@@ -53,6 +53,14 @@ namespace BlackJack
             }
         }
 
+        public bool IsBust
+        {
+            get
+            {
+                return Value > 21;
+            }
+        }
+
         public void AddCard(Card card)
         {
             if (__allCards.Contains(card))
