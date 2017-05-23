@@ -71,9 +71,21 @@ namespace BlackJack
             }
             else
             {
-                result += string.Join(", ", cards);
+                List<string> cardStrings = new List<string>();
+                foreach (Card card in cards)
+                {
+                    cardStrings.Add(GetCardString(card));
+                }
+                result += string.Join(", ", cardStrings);
             }
             Console.WriteLine(result);
+        }
+
+        private static string GetCardString(Card card)
+        {
+            // TODO: Return a nicely formatted version of card, e.g. if this card's Face is Ten and Suit is Diamonds, return "10 ♦"
+
+            return card.ToString();
         }
     }
 }
