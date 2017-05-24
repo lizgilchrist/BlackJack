@@ -12,14 +12,6 @@ namespace BlackJack
 
         public Face Face { get; set; }
 
-        /*public string Value
-        {
-            get
-            {
-                return ValueId.ToString();
-            }
-        }
-        */
         public Card(Suit suit, Face face)
         {
             if (face > Face.King || face < Face.Ace)
