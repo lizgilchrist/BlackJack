@@ -33,11 +33,16 @@ namespace BlackJack
             PrintHand("Liz", lizHand);
 
             Console.WriteLine("The total for Liz's hand is " + lizHand.Value);
-            //Compare cardTotal to 21 return whatever gets them closest to 21.
-            //Hit or Stay?
 
+            Hand dealer = new Hand();
+            dealer.AddCard(deck.GetNextCard());
+            //Show the player just one card from the dealer
+            PrintHand("Dealer", dealer);
 
-            //If equal to 21 then highly likely the player has won or maybe draw with dealer.
+            Console.WriteLine("The total for Dealer's hand is " + dealer.Value);
+
+            //Hit or Stay? - Player
+
             while (!lizHand.IsBust)
             {
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
@@ -51,24 +56,52 @@ namespace BlackJack
                 }
                 else if (userInput == "Stay")
                 {
-                    Console.WriteLine("The Total for Liz's hand stays as " + lizHand.Value);
+                    Console.WriteLine("The total for Liz's hand stays as " + lizHand.Value);
                     break;
                 }
-                
             }
 
-            //If card value goes over 21 after a hit - Console.WriteLine("BUST! Sorry you lose");
-            //Compare with the dealers total to decide who has won. Closest to 21 wins.
+            if (lizHand.IsBust)
+            {
+                Console.WriteLine("Liz's hand is BUST! Dealer wins");
+                return;
+            }
 
-            Hand dealer = new Hand();
-            dealer.AddCard(deck.GetNextCard());
+            //Dealers turn
+
             dealer.AddCard(deck.GetNextCard());
             PrintHand("Dealer", dealer);
-            
             Console.WriteLine("The total for Dealer's hand is " + dealer.Value);
-            //Compare cardTotal to 21 return whatever gets them closest to 21.
-            //Hit or Stay?
-            
+
+            if (dealer.Value >= 17)
+            {
+                Console.WriteLine("The total for the dealer's hand stays as " + dealer.Value);
+            }
+
+            while (dealer.Value < 17)
+            {
+                dealer.AddCard(deck.GetNextCard());
+                PrintHand("Dealer", dealer);
+                Console.WriteLine("The total for the Dealer's hand now is " + dealer.Value);
+            }
+
+            //Compare results
+
+            if (!dealer.IsBust || !lizHand.IsBust)
+            {
+                if (dealer.Value < lizHand.Value)
+                {
+                    Console.WriteLine("Liz wins!");
+                }
+                else if (dealer.Value == lizHand.Value)
+                {
+                    Console.WriteLine("It's a tie!");
+                }
+                else
+                {
+                    Console.WriteLine("Dealer wins!");
+                }
+            }
 
             //Stack<Card> cards = new Stack<Card>();
             //Stack<Card> someOtherCards = new Stack<Card>();
