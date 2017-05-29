@@ -43,9 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Card.cs" />
+    <Compile Include="DealerPlayer.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="Face.cs" />
     <Compile Include="Hand.cs" />
+    <Compile Include="HumanPlayer.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Suit.cs" />

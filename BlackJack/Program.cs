@@ -20,87 +20,88 @@ namespace BlackJack
             Console.OutputEncoding = Encoding.UTF8;
 
             Deck deck = new Deck();
-            
-            Hand lizHand = new Hand();
-            lizHand.AddCard(deck.GetNextCard());
-            lizHand.AddCard(deck.GetNextCard());
-            PrintHand("Liz", lizHand);
-            Console.WriteLine("The total for Liz's hand is " + lizHand.Value);
 
-            Hand dealer = new Hand();
-            dealer.AddCard(deck.GetNextCard());
-            //Show the player just one card from the dealer
-            PrintHand("Dealer", dealer);
-            Console.WriteLine("The total for Dealer's hand is " + dealer.Value);
+            HumanPlayer human = new HumanPlayer(Console.ReadLine());
+            human.Hand = new Hand();
+            human.Hand.AddCard(deck.GetNextCard());
+            human.Hand.AddCard(deck.GetNextCard());
+            PrintHand(human);
+            Console.WriteLine("The total for " + human.Name + "'s hand is " + human.Hand.Value);
+
+            DealerPlayer dealer = new DealerPlayer();
+            dealer.Hand = new Hand();
+            dealer.Hand.AddCard(deck.GetNextCard());
+            PrintHand(dealer);
+            Console.WriteLine("The total for the " + dealer.Name + "'s hand is " + dealer.Hand.Value);
 
             //Hit or Stay? - Player
 
-            while (!lizHand.IsBust)
+            while (!human.Hand.IsBust)
             {
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
                 string userInput = Console.ReadLine();
 
                 if (userInput == "Hit")
                 {
-                    lizHand.AddCard(deck.GetNextCard());
-                    PrintHand("Liz", lizHand);
-                    Console.WriteLine("The total for Liz's hand now is " + lizHand.Value);
+                    human.Hand.AddCard(deck.GetNextCard());
+                    PrintHand(human);
+                    Console.WriteLine("The total for " + human.Name + "'s hand now is " + human.Hand.Value);
                 }
                 else if (userInput == "Stay")
                 {
-                    Console.WriteLine("The total for Liz's hand stays as " + lizHand.Value);
+                    Console.WriteLine("The total for " + human.Name + "'s hand stays as " + human.Hand.Value);
                     break;
                 }
             }
 
-            if (lizHand.IsBust)
+            if (human.Hand.IsBust)
             {
-                Console.WriteLine("Liz's hand is BUST! Dealer wins");
+                Console.WriteLine(human.Name + "'s hand is BUST! Dealer wins");
                 return;
             }
 
             //Dealers turn
 
-            dealer.AddCard(deck.GetNextCard());
-            PrintHand("Dealer", dealer);
-            Console.WriteLine("The total for Dealer's hand is " + dealer.Value);
+            dealer.Hand.AddCard(deck.GetNextCard());
+            PrintHand(dealer);
+            Console.WriteLine("The total for " + dealer.Name + "'s hand is " + dealer.Hand.Value);
 
-            if (dealer.Value >= 17)
+            if (dealer.Hand.Value >= 17)
             {
-                Console.WriteLine("The total for the dealer's hand stays as " + dealer.Value);
+                Console.WriteLine("The total for the " + dealer.Name + "'s hand stays as " + dealer.Hand.Value);
             }
 
-            while (dealer.Value < 17)
+            while (dealer.Hand.Value < 17)
             {
-                dealer.AddCard(deck.GetNextCard());
-                PrintHand("Dealer", dealer);
-                Console.WriteLine("The total for the Dealer's hand now is " + dealer.Value);
+                dealer.Hand.AddCard(deck.GetNextCard());
+                PrintHand(dealer);
+                Console.WriteLine("The total for the " + dealer.Name + "'s hand now is " + dealer.Hand.Value);
             }
 
             //Compare results
 
-            if (!dealer.IsBust || !lizHand.IsBust)
+            if (!dealer.Hand.IsBust || !human.Hand.IsBust)
             {
-                if (dealer.Value < lizHand.Value)
+                if (dealer.Hand.Value < human.Hand.Value)
                 {
-                    Console.WriteLine("Liz wins!");
+                    Console.WriteLine(human.Name + " wins!");
                 }
-                else if (dealer.Value == lizHand.Value)
+                else if (dealer.Hand.Value == human.Hand.Value)
                 {
                     Console.WriteLine("It's a tie!");
                 }
                 else
                 {
-                    Console.WriteLine("Dealer wins!");
+                    Console.WriteLine(dealer.Name + " wins!");
                 }
             }
 
         }
 
-        private static void PrintHand(string playerName, Hand hand)
+        private static void PrintHand(Player player)
         {
-            string result = $"{playerName}'s hand is: ";
-            IEnumerable<Card> cards = hand.GetCards();
+            string result = $"{player.Name}'s hand is: ";
+            IEnumerable<Card> cards = player.Hand.GetCards();
             if (cards.Count() == 0)
             {
                 result += "empty";
