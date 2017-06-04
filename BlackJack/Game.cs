@@ -18,7 +18,9 @@ namespace BlackJack
         }
 
         public event Action<OnGameStartArgs> OnGameStart;
-        public event Action OnGameTurn;
+        public event Func<OnGameTurnArgs, TurnAction> OnGameTurn;
+        public event Action<OnGameHitArgs> OnGameHit;
+        public event Action<OnGameStayArgs> OnGameStay;
 
         public void Start()
         {
@@ -34,12 +36,40 @@ namespace BlackJack
 
             OnGameStart(new OnGameStartArgs()
             {
-                Human = _player,
+                Player = _player,
                 Dealer = dealer
             });
 
             
 
+            while (!_player.Hand.IsBust)
+            {
+                TurnAction turnAction = OnGameTurn(new OnGameTurnArgs()
+                {
+                    Player = _player
+                });
+
+                if (turnAction == TurnAction.Hit)
+                {
+                    _player.Hand.AddCard(deck.GetNextCard());
+                    OnGameHit(new OnGameHitArgs()
+                    {
+                        Player = _player
+                    });
+                }
+                else if (turnAction == TurnAction.Stay)
+                {
+                    OnGameStay(new OnGameStayArgs()
+                    {
+                        Player = _player
+                    });
+                    break;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Invalid TurnAction");
+                }
+            }
         }
 
     }
@@ -48,8 +78,21 @@ namespace BlackJack
     {
         public Player Dealer { get; set; }
 
-        public Player Human { get; set; }
+        public Player Player { get; set; }
     }
 
-    
+    public class OnGameTurnArgs
+    {
+        public Player Player { get; set; }
+    }
+
+    public class OnGameHitArgs
+    {
+        public Player Player { get; set; } 
+    }
+
+    public class OnGameStayArgs
+    {
+        public Player Player { get; set; }
+    }
 }

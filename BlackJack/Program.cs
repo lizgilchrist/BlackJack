@@ -20,14 +20,43 @@ namespace BlackJack
             Console.OutputEncoding = Encoding.UTF8;
 
             Game game = new Game(new HumanPlayer(Console.ReadLine()));
-            game.OnGameStart += ev =>
+
+            game.OnGameStart += (ev) =>
             {
                 Console.WriteLine("Let the game begin!");
-                PrintHand(ev.Human);
-                Console.WriteLine("The total for " + ev.Human.Name + "'s hand is " + ev.Human.Hand.Value);
+                PrintHand(ev.Player);
+                Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Player.Hand.Value);
 
                 PrintHand(ev.Dealer);
                 Console.WriteLine("The total for the " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
+            };
+
+            game.OnGameTurn += (ev) =>
+            {
+                Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
+                string userInput = Console.ReadLine();
+
+                if (userInput == "Hit")
+                {
+                    return TurnAction.Hit;
+                }
+                else if (userInput == "Stay")
+                {
+                    return TurnAction.Stay;
+                }
+
+                throw new Exception("TODO: Need to handle bad input from user");
+            };
+
+            game.OnGameHit += (ev) =>
+            {
+                PrintHand(ev.Player);
+                Console.WriteLine("The total for " + ev.Player.Name + "'s hand now is " + ev.Player.Hand.Value);
+            };
+
+            game.OnGameStay += (ev) =>
+            {
+                Console.WriteLine("The total for " + ev.Player.Name + "'s hand stays as " + ev.Player.Hand.Value);
             };
 
             game.Start();
