@@ -8,7 +8,7 @@ namespace BlackJack
 {
     public class HumanPlayer : Player
     {
-        public string _name;
+        private string _name;
 
         public override string Name
         {
@@ -17,6 +17,7 @@ namespace BlackJack
                 return _name;
             }
         }
+
         public HumanPlayer(string name)
         {
             _name = name;
