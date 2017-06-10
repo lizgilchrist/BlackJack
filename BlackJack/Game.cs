@@ -21,6 +21,8 @@ namespace BlackJack
         public event Func<OnGameTurnArgs, TurnAction> OnGameTurn;
         public event Action<OnGameHitArgs> OnGameHit;
         public event Action<OnGameStayArgs> OnGameStay;
+        public event Action<OnGameEndArgs> OnGameEnd;
+        public event Action<OnGameHoleCardRevealArgs> OnGameHoleCardReveal;
 
         public void Start()
         {
@@ -39,8 +41,6 @@ namespace BlackJack
                 Player = _player,
                 Dealer = dealer
             });
-
-            
 
             while (!_player.Hand.IsBust)
             {
@@ -70,8 +70,50 @@ namespace BlackJack
                     throw new InvalidOperationException("Invalid TurnAction");
                 }
             }
-        }
 
+            if (_player.Hand.IsBust)
+            {
+                OnGameEnd(new OnGameEndArgs()
+                {
+                    Player = _player
+                });
+                return;
+            }
+
+            Card holeCard = deck.GetNextCard();
+            dealer.Hand.AddCard(holeCard);
+            OnGameHoleCardReveal(new OnGameHoleCardRevealArgs()
+            {
+                Dealer = dealer,
+                HoleCard = holeCard
+            });
+
+            while (dealer.Hand.Value < 17)
+            {
+                dealer.Hand.AddCard(deck.GetNextCard());
+                OnGameHit(new OnGameHitArgs()
+                {
+                    Player = dealer
+                });
+
+            }
+
+            if (!dealer.Hand.IsBust)
+            {
+                OnGameStay(new OnGameStayArgs()
+                {
+                    Player = dealer
+                });
+            }
+
+            else
+            {
+                OnGameEnd(new OnGameEndArgs()
+                {
+                    Player = dealer
+                });
+            }
+        }
     }
 
     public class OnGameStartArgs
@@ -94,5 +136,19 @@ namespace BlackJack
     public class OnGameStayArgs
     {
         public Player Player { get; set; }
+    }
+
+    public class OnGameEndArgs
+    {
+        public Player Dealer { get; set; }
+
+        public Player Player { get; set; }
+    }
+
+    public class OnGameHoleCardRevealArgs
+    {
+        public Player Dealer { get; set; }
+
+        public Card HoleCard { get; set; }
     }
 }

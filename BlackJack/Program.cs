@@ -59,6 +59,17 @@ namespace BlackJack
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand stays as " + ev.Player.Hand.Value);
             };
 
+            game.OnGameEnd += (ev) =>
+            {
+                Console.WriteLine(ev.Player.Name + "'s hand is BUST!");
+            };
+
+            game.OnGameHoleCardReveal += (ev) =>
+            {
+                PrintHand(ev.Dealer);
+                Console.WriteLine("The total for " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
+            };
+
             game.Start();
 
             Deck deck = new Deck();
@@ -119,6 +130,8 @@ namespace BlackJack
                 PrintHand(dealer);
                 Console.WriteLine("The total for the " + dealer.Name + "'s hand now is " + dealer.Hand.Value);
             }
+
+            //NOTE: Dealer's hand can go bust. Use OnGameEnd 
 
             //Compare results
 
