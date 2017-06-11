@@ -171,6 +171,5 @@ namespace BlackJack
     public class OnGameEndArgs
     {
         public Player Winner { get; set; }
-
     }
 }

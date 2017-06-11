@@ -11,7 +11,6 @@ namespace BlackJack
     //Surrender: Is when the dealers first card is either an Ace or a 10 value - A player who surrenders gives half their bet to the house. The round ends and a new round starts.
     //Insurance: When the dealers first card is an Ace - The player can 'take insurance' against the chance that the dealer has blackjack.
     //Push: It's a tie
-    //Payouts:
     
     class Program
     {
@@ -83,83 +82,7 @@ namespace BlackJack
             };
 
             game.Start();
-
-            Deck deck = new Deck();
-
-            HumanPlayer human = new HumanPlayer(Console.ReadLine());
-            human.Hand = new Hand();
-            human.Hand.AddCard(deck.GetNextCard());
-            human.Hand.AddCard(deck.GetNextCard());
-            PrintHand(human);
-            Console.WriteLine("The total for " + human.Name + "'s hand is " + human.Hand.Value);
-
-            DealerPlayer dealer = new DealerPlayer();
-            dealer.Hand = new Hand();
-            dealer.Hand.AddCard(deck.GetNextCard());
-            PrintHand(dealer);
-            Console.WriteLine("The total for the " + dealer.Name + "'s hand is " + dealer.Hand.Value);
-
-            //Hit or Stay? - Player
-
-            while (!human.Hand.IsBust)
-            {
-                Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
-                string userInput = Console.ReadLine();
-
-                if (userInput == "Hit")
-                {
-                    human.Hand.AddCard(deck.GetNextCard());
-                    PrintHand(human);
-                    Console.WriteLine("The total for " + human.Name + "'s hand now is " + human.Hand.Value);
-                }
-                else if (userInput == "Stay")
-                {
-                    Console.WriteLine("The total for " + human.Name + "'s hand stays as " + human.Hand.Value);
-                    break;
-                }
-            }
-
-            if (human.Hand.IsBust)
-            {
-                Console.WriteLine(human.Name + "'s hand is BUST! Dealer wins");
-                return;
-            }
-
-            //Dealers turn
-
-            dealer.Hand.AddCard(deck.GetNextCard());
-            PrintHand(dealer);
-            Console.WriteLine("The total for " + dealer.Name + "'s hand is " + dealer.Hand.Value);
-
-            if (dealer.Hand.Value >= 17)
-            {
-                Console.WriteLine("The total for the " + dealer.Name + "'s hand stays as " + dealer.Hand.Value);
-            }
-
-            while (dealer.Hand.Value < 17)
-            {
-                dealer.Hand.AddCard(deck.GetNextCard());
-                PrintHand(dealer);
-                Console.WriteLine("The total for the " + dealer.Name + "'s hand now is " + dealer.Hand.Value);
-            }
-
-            //Compare results
-
-            if (!dealer.Hand.IsBust || !human.Hand.IsBust)
-            {
-                if (dealer.Hand.Value < human.Hand.Value)
-                {
-                    Console.WriteLine(human.Name + " wins!");
-                }
-                else if (dealer.Hand.Value == human.Hand.Value)
-                {
-                    Console.WriteLine("It's a tie!");
-                }
-                else
-                {
-                    Console.WriteLine(dealer.Name + " wins!");
-                }
-            }
+           
         }
 
         private static void PrintHand(Player player)
