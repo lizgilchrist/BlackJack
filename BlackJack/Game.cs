@@ -9,7 +9,6 @@ namespace BlackJack
     public class Game
     {
         //Events
-        //
         private Player _player;
 
         public Game(Player player)
@@ -21,8 +20,9 @@ namespace BlackJack
         public event Func<OnGameTurnArgs, TurnAction> OnGameTurn;
         public event Action<OnGameHitArgs> OnGameHit;
         public event Action<OnGameStayArgs> OnGameStay;
-        public event Action<OnGameEndArgs> OnGameEnd;
+        public event Action<OnGameBustArgs> OnGameBust;
         public event Action<OnGameHoleCardRevealArgs> OnGameHoleCardReveal;
+        public event Action<OnGameEndArgs> OnGameEnd;
 
         public void Start()
         {
@@ -73,7 +73,7 @@ namespace BlackJack
 
             if (_player.Hand.IsBust)
             {
-                OnGameEnd(new OnGameEndArgs()
+                OnGameBust(new OnGameBustArgs()
                 {
                     Player = _player
                 });
@@ -88,7 +88,7 @@ namespace BlackJack
                 HoleCard = holeCard
             });
 
-            while (dealer.Hand.Value < 17)
+            while (dealer.Hand.Value < 17 && dealer.Hand.Value < _player.Hand.Value)
             {
                 dealer.Hand.AddCard(deck.GetNextCard());
                 OnGameHit(new OnGameHitArgs()
@@ -108,11 +108,27 @@ namespace BlackJack
 
             else
             {
-                OnGameEnd(new OnGameEndArgs()
+                OnGameBust(new OnGameBustArgs()
                 {
                     Player = dealer
                 });
             }
+
+            Player winner = null;
+
+            if (dealer.Hand.Value > _player.Hand.Value)
+            {
+                winner = dealer;
+            }
+            else if (dealer.Hand.Value < _player.Hand.Value)
+            {
+                winner = _player;
+            }
+
+            OnGameEnd(new OnGameEndArgs()
+            {
+                Winner = winner
+            });
         }
     }
 
@@ -138,7 +154,7 @@ namespace BlackJack
         public Player Player { get; set; }
     }
 
-    public class OnGameEndArgs
+    public class OnGameBustArgs
     {
         public Player Dealer { get; set; }
 
@@ -150,5 +166,11 @@ namespace BlackJack
         public Player Dealer { get; set; }
 
         public Card HoleCard { get; set; }
+    }
+
+    public class OnGameEndArgs
+    {
+        public Player Winner { get; set; }
+
     }
 }

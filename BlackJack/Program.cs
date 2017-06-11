@@ -59,7 +59,7 @@ namespace BlackJack
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand stays as " + ev.Player.Hand.Value);
             };
 
-            game.OnGameEnd += (ev) =>
+            game.OnGameBust += (ev) =>
             {
                 Console.WriteLine(ev.Player.Name + "'s hand is BUST!");
             };
@@ -68,6 +68,18 @@ namespace BlackJack
             {
                 PrintHand(ev.Dealer);
                 Console.WriteLine("The total for " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
+            };
+
+            game.OnGameEnd += (ev) =>
+            {
+                if (ev.Winner == null)
+                {
+                    Console.WriteLine("It's a tie!");
+                }
+                else
+                {
+                    Console.WriteLine(ev.Winner.Name + " wins!");
+                }
             };
 
             game.Start();
@@ -131,8 +143,6 @@ namespace BlackJack
                 Console.WriteLine("The total for the " + dealer.Name + "'s hand now is " + dealer.Hand.Value);
             }
 
-            //NOTE: Dealer's hand can go bust. Use OnGameEnd 
-
             //Compare results
 
             if (!dealer.Hand.IsBust || !human.Hand.IsBust)
@@ -150,7 +160,6 @@ namespace BlackJack
                     Console.WriteLine(dealer.Name + " wins!");
                 }
             }
-
         }
 
         private static void PrintHand(Player player)
