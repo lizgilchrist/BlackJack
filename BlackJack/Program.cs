@@ -18,7 +18,9 @@ namespace BlackJack
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            Game game = new Game(new HumanPlayer(Console.ReadLine()));
+            Game game = new Game(
+                new HumanPlayer(Console.ReadLine()),
+                new Deck());
 
             game.OnGameStart += (ev) =>
             {

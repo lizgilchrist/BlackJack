@@ -12,7 +12,7 @@ namespace BlackJack.Tests
         [Fact]
         public void HitTriggersHitEvent()
         {
-            Game game = CreateGame();
+            Game game = CreateGame(new Deck());
 
             game.OnGameTurn += (ev) =>
             {
@@ -39,7 +39,7 @@ namespace BlackJack.Tests
         [Fact]
         public void StayTriggeredStayEvent()
         {
-            Game game = CreateGame();
+            Game game = CreateGame(new Deck());
 
             game.OnGameTurn += (ev) =>
             {
@@ -69,9 +69,37 @@ namespace BlackJack.Tests
             Assert.True(onGameStayTriggered);
         }
 
-        public Game CreateGame()
+        [Fact]
+        public void TestPlayerBustWithThreeKings()
         {
-            Game game = new Game(new HumanPlayer("Player"));
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Clubs, Face.King),
+                new Card(Suit.Clubs, Face.King),
+                new Card(Suit.Clubs, Face.King),
+                new Card(Suit.Clubs, Face.King)));
+
+            game.OnGameTurn += ev =>
+            {
+                return TurnAction.Hit;
+            };
+
+            bool onGameBustTriggered = false;
+            game.OnGameBust += (ev) =>
+            {
+                if (ev.Player.Name == "Player")
+                {
+                    onGameBustTriggered = true;
+                }
+            };
+
+            game.Start();
+
+            Assert.True(onGameBustTriggered);
+        }
+
+        public Game CreateGame(IDeck deck)
+        {
+            Game game = new Game(new HumanPlayer("Player"), deck);
             game.OnGameStart += (ev) => { };
             game.OnGameHit += (ev) => { };
             game.OnGameStay += (ev) => { };

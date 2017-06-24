@@ -10,10 +10,12 @@ namespace BlackJack
     {
         //Events
         private Player _player;
+        private IDeck _deck;
 
-        public Game(Player player)
+        public Game(Player player, IDeck deck)
         {
             _player = player;
+            _deck = deck;
         }
 
         public event Action<OnGameStartArgs> OnGameStart;
@@ -26,15 +28,13 @@ namespace BlackJack
 
         public void Start()
         {
-            Deck deck = new Deck();
-
             _player.Hand = new Hand();
-            _player.Hand.AddCard(deck.GetNextCard());
-            _player.Hand.AddCard(deck.GetNextCard());
+            _player.Hand.AddCard(_deck.GetNextCard());
+            _player.Hand.AddCard(_deck.GetNextCard());
 
             DealerPlayer dealer = new DealerPlayer();
             dealer.Hand = new Hand();
-            dealer.Hand.AddCard(deck.GetNextCard());
+            dealer.Hand.AddCard(_deck.GetNextCard());
 
             OnGameStart(new OnGameStartArgs()
             {
@@ -51,7 +51,7 @@ namespace BlackJack
 
                 if (turnAction == TurnAction.Hit)
                 {
-                    _player.Hand.AddCard(deck.GetNextCard());
+                    _player.Hand.AddCard(_deck.GetNextCard());
                     OnGameHit(new OnGameHitArgs()
                     {
                         Player = _player
@@ -80,7 +80,7 @@ namespace BlackJack
                 return;
             }
 
-            Card holeCard = deck.GetNextCard();
+            Card holeCard = _deck.GetNextCard();
             dealer.Hand.AddCard(holeCard);
             OnGameHoleCardReveal(new OnGameHoleCardRevealArgs()
             {
@@ -90,7 +90,7 @@ namespace BlackJack
 
             while (dealer.Hand.Value < 17 && dealer.Hand.Value < _player.Hand.Value)
             {
-                dealer.Hand.AddCard(deck.GetNextCard());
+                dealer.Hand.AddCard(_deck.GetNextCard());
                 OnGameHit(new OnGameHitArgs()
                 {
                     Player = dealer

@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="GameTests.cs" />
     <Compile Include="HandValueTests.cs" />
+    <Compile Include="MockDeck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

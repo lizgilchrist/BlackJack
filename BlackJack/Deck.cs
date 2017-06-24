@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlackJack
 {
-    public class Deck
+    public class Deck : IDeck
     {
         private static readonly Random RandomCard = new Random();
 
