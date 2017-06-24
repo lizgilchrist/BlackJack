@@ -20,7 +20,7 @@ namespace BlackJack.Tests
             };
 
             bool onGameHitTriggered = false;
-            game.OnGameHit += (ev) => 
+            game.OnGameHit += (ev) =>
             {
                 onGameHitTriggered = true;
             };
@@ -49,7 +49,7 @@ namespace BlackJack.Tests
             bool onGameHitTriggered = false;
             game.OnGameHit += (ev) =>
             {
-                if(ev.Player.Name == "Player")
+                if (ev.Player.Name == "Player")
                 {
                     onGameHitTriggered = true;
                 }
@@ -58,7 +58,7 @@ namespace BlackJack.Tests
             bool onGameStayTriggered = false;
             game.OnGameStay += (ev) =>
             {
-                if(ev.Player.Name == "Player")
+                if (ev.Player.Name == "Player")
                 {
                     onGameStayTriggered = true;
                 }
@@ -96,6 +96,37 @@ namespace BlackJack.Tests
 
             Assert.True(onGameBustTriggered);
         }
+
+        [Fact]
+        public void TestDealerBustWithThreeKings()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Six),
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Five),
+                new Card(Suit.Clubs, Face.King)
+                ));
+
+            game.OnGameTurn += ev =>
+            {
+                return TurnAction.Stay;
+            };
+           
+            bool onGameBustTriggered = false;
+            game.OnGameBust += (ev) =>
+            {
+                if (ev.Player.Name == "Dealer")
+                {
+                    onGameBustTriggered = true;
+                }
+            };
+
+            game.Start();
+
+            Assert.True(onGameBustTriggered);
+        }
+
 
         public Game CreateGame(IDeck deck)
         {
