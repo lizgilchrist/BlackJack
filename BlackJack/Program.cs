@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 namespace BlackJack
 {
     //Doubling down: Is allowed straight after the first two cards are dealt - The player will get one more card. They cannot ask for any more hits after this third card.
-    //Split: If you two cards with the same value then you can split them into two separate hands - You will get hit once with both hands.
+    //Split: If you two cards with the same value then you can split them into two separate hands - You will get hit once with both hands. NOTE: If you split Aces you get 1 card only
     //Surrender: Is when the dealers first card is either an Ace or a 10 value - A player who surrenders gives half their bet to the house. The round ends and a new round starts.
     //Insurance: When the dealers first card is an Ace - The player can 'take insurance' against the chance that the dealer has blackjack.
-    //Push: It's a tie
     
     class Program
     {

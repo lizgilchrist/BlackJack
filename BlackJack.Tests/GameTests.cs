@@ -127,7 +127,6 @@ namespace BlackJack.Tests
             Assert.True(onGameBustTriggered);
         }
 
-
         public Game CreateGame(IDeck deck)
         {
             Game game = new Game(new HumanPlayer("Player"), deck);
@@ -139,5 +138,97 @@ namespace BlackJack.Tests
             game.OnGameEnd += (ev) => { };
             return game;
         }
+
+        [Fact]
+        public void TestPlayerWins()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Eight)
+                ));
+
+            game.OnGameTurn += ev =>
+            {
+                return TurnAction.Stay;
+            };
+
+            bool onGameEndPlayerWins = false;
+
+            game.OnGameEnd += (ev) =>
+            {
+                if (ev.Winner.Name == "Player")
+                {
+                    onGameEndPlayerWins = true;
+                }
+            };
+
+            game.Start();
+
+            Assert.True(onGameEndPlayerWins);
+        }
+
+
+        [Fact]
+        public void TestDealerWins()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Eight),
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Ten)
+                ));
+
+            game.OnGameTurn += ev =>
+            {
+                return TurnAction.Stay;
+            };
+
+            bool onGameEndDealerWins = false;
+
+            game.OnGameEnd += (ev) =>
+            {
+                if (ev.Winner.Name == "Dealer")
+                {
+                    onGameEndDealerWins = true;
+                }
+            };
+
+            game.Start();
+
+            Assert.True(onGameEndDealerWins);
+        }
+
+        [Fact]
+        public void TestGameIsTie()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Ten)
+                ));
+
+            game.OnGameTurn += ev =>
+            {
+                return TurnAction.Stay;
+            };
+
+            bool onGameEndTie = false;
+
+            game.OnGameEnd += (ev) =>
+            {
+                if (ev.Winner == null)
+                {
+                    onGameEndTie = true;
+                }
+            };
+
+            game.Start();
+
+            Assert.True(onGameEndTie);
+        }
+
     }
 }
