@@ -98,7 +98,7 @@ namespace BlackJack.Tests
         }
 
         [Fact]
-        public void TestDealerBustWithThreeKings()
+        public void TestDealerBust()
         {
             var game = CreateGame(new MockDeck(
                 new Card(Suit.Clubs, Face.Ten),
@@ -112,7 +112,7 @@ namespace BlackJack.Tests
             {
                 return TurnAction.Stay;
             };
-           
+
             bool onGameBustTriggered = false;
             game.OnGameBust += (ev) =>
             {
@@ -131,6 +131,7 @@ namespace BlackJack.Tests
         {
             Game game = new Game(new HumanPlayer("Player"), deck);
             game.OnGameStart += (ev) => { };
+            game.OnGameSplit += (ev) => { return SplitAction.No; };
             game.OnGameHit += (ev) => { };
             game.OnGameStay += (ev) => { };
             game.OnGameBust += (ev) => { };
@@ -228,6 +229,35 @@ namespace BlackJack.Tests
             game.Start();
 
             Assert.True(onGameEndTie);
+        }
+
+        [Fact]
+        public void TestPlayerOfferedSplit()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Diamonds, Face.Ten),
+                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Eight),
+                new Card(Suit.Clubs, Face.Ten)
+
+                ));
+
+            bool playerOfferedSplit = false;
+            game.OnGameSplit += (ev) =>
+            {
+                if(ev.Player.Name == "Player")
+                {
+                    playerOfferedSplit = true;
+                };
+                return SplitAction.No;
+            };
+
+            game.OnGameTurn += (ev) => { return TurnAction.Stay;};
+
+            game.Start();
+
+            Assert.True(playerOfferedSplit);
+
         }
 
     }

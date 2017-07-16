@@ -17,7 +17,7 @@ namespace BlackJack
             _cards = new List<Card>();
         }
 
-        public IEnumerable<Card> GetCards()
+        public List<Card> GetCards()
         {
             return _cards; 
         }

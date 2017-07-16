@@ -31,6 +31,23 @@ namespace BlackJack
                 Console.WriteLine("The total for the " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
             };
 
+            game.OnGameSplit += (ev) =>
+            {
+                Console.WriteLine("Would you like to split?");
+                string userInput = Console.ReadLine();
+
+                if (userInput == "Yes")
+                {
+                    return SplitAction.Yes;
+                }
+                else if (userInput == "No")
+                {
+                    return SplitAction.No;
+                }
+
+                throw new Exception("TODO: Need to handle bad input from user");
+            };
+
             game.OnGameTurn += (ev) =>
             {
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");

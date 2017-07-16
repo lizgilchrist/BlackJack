@@ -19,6 +19,7 @@ namespace BlackJack
         }
 
         public event Action<OnGameStartArgs> OnGameStart;
+        public event Func<OnGameSplitArgs, SplitAction> OnGameSplit;
         public event Func<OnGameTurnArgs, TurnAction> OnGameTurn;
         public event Action<OnGameHitArgs> OnGameHit;
         public event Action<OnGameStayArgs> OnGameStay;
@@ -41,6 +42,15 @@ namespace BlackJack
                 Player = _player,
                 Dealer = dealer
             });
+
+            List<Card> cards = _player.Hand.GetCards();
+            if (cards[0].Face == cards[1].Face)
+            {
+                OnGameSplit(new OnGameSplitArgs()
+                {
+                    Player = _player
+                });
+            }
 
             while (!_player.Hand.IsBust)
             {
@@ -136,6 +146,11 @@ namespace BlackJack
     {
         public Player Dealer { get; set; }
 
+        public Player Player { get; set; }
+    }
+
+    public class OnGameSplitArgs
+    {
         public Player Player { get; set; }
     }
 
