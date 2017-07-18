@@ -32,6 +32,7 @@ namespace BlackJack.Runner
             game.OnGameHit += (ev) => { };
             game.OnGameStay += (ev) => { };
             game.OnGameBust += (ev) => { };
+            game.OnGameTurn += (ev) => { return TurnAction.Stay;};
             game.OnGameHoleCardReveal += (ev) => { };
             game.OnGameEnd += (ev) => { };
             return game;

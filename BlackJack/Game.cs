@@ -58,6 +58,7 @@ namespace BlackJack
                     splitHand.AddCard(_deck.GetNextCard());
                     _player.SplitHand = splitHand;
 
+
                 }
             }
 
@@ -90,11 +91,54 @@ namespace BlackJack
                 }
             }
 
+            if(_player.SplitHand != null)
+            {
+                while (!_player.SplitHand.IsBust)
+                {
+                    TurnAction turnAction = OnGameTurn(new OnGameTurnArgs()
+                    {
+                        Player = _player
+                    });
+
+                    if (turnAction == TurnAction.Hit)
+                    {
+                        _player.SplitHand.AddCard(_deck.GetNextCard());
+                        OnGameHit(new OnGameHitArgs()
+                        {
+                            Player = _player
+                        });
+                    }
+                    else if (turnAction == TurnAction.Stay)
+                    {
+                        OnGameStay(new OnGameStayArgs()
+                        {
+                            Player = _player
+                        });
+                        break;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invalid TurnAction");
+                    }
+                }
+            }
+
             if (_player.Hand.IsBust)
             {
                 OnGameBust(new OnGameBustArgs()
                 {
-                    Player = _player
+                    Player = _player,
+                    BustHand = _player.Hand
+                });
+                return;
+            }
+
+            if (_player.SplitHand.IsBust)
+            {
+                OnGameBust(new OnGameBustArgs()
+                {
+                    Player = _player,
+                    BustHand = _player.SplitHand
                 });
                 return;
             }
@@ -129,7 +173,8 @@ namespace BlackJack
             {
                 OnGameBust(new OnGameBustArgs()
                 {
-                    Player = dealer
+                    Dealer = dealer,
+                    BustHand = dealer.Hand
                 });
             }
 
@@ -160,12 +205,12 @@ namespace BlackJack
 
     public class OnGameSplitArgs
     {
-        public Player Player { get; set; }
+        public HumanPlayer Player { get; set; }
     }
 
     public class OnGameTurnArgs
     {
-        public Player Player { get; set; }
+        public HumanPlayer Player { get; set; }
     }
 
     public class OnGameHitArgs
@@ -180,9 +225,11 @@ namespace BlackJack
 
     public class OnGameBustArgs
     {
-        public Player Dealer { get; set; }
+        public DealerPlayer Dealer { get; set; }
 
-        public Player Player { get; set; }
+        public HumanPlayer Player { get; set; }
+
+        public Hand BustHand { get; set; }
     }
 
     public class OnGameHoleCardRevealArgs

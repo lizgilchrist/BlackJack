@@ -53,6 +53,11 @@ namespace BlackJack
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
                 string userInput = Console.ReadLine();
 
+                if (ev.Player.SplitHand != null)
+                {
+                    //Player's hand is split
+                }
+
                 if (userInput == "Hit")
                 {
                     return TurnAction.Hit;
@@ -78,7 +83,29 @@ namespace BlackJack
 
             game.OnGameBust += (ev) =>
             {
-                Console.WriteLine(ev.Player.Name + "'s hand is BUST!");
+                if (ev.Player == null)
+                {
+                    Console.WriteLine(ev.Dealer + "'s hand is BUST!");
+                }
+                if (ev.Dealer == null)
+                {
+                    if(ev.Player.SplitHand == null)
+                    {
+                        Console.WriteLine(ev.Player.Name + "'s hand is BUST!");
+                    }
+                    else
+                    {
+                        if(ev.BustHand == ev.Player.Hand)
+                        {
+                            Console.WriteLine(ev.Player.Name + "'s first hand is BUST!");
+                        }
+                        else
+                        {
+                            Console.WriteLine(ev.Player.Name + "'s second hand is BUST!");
+                        }
+                    }
+                }
+                
             };
 
             game.OnGameHoleCardReveal += (ev) =>
