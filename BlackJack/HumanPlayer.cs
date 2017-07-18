@@ -20,6 +20,14 @@ namespace BlackJack
 
         public Hand SplitHand { get; set; }
 
+        public bool IsSplit
+        {
+            get
+            {
+                return SplitHand != null;
+            }
+        }
+
         public HumanPlayer(string name)
         {
             _name = name;

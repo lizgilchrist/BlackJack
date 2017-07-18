@@ -57,70 +57,14 @@ namespace BlackJack
                     _player.Hand.AddCard(_deck.GetNextCard());
                     splitHand.AddCard(_deck.GetNextCard());
                     _player.SplitHand = splitHand;
-
-
                 }
             }
 
-            while (!_player.Hand.IsBust)
+            ResolvePlayerHand(_player.Hand);
+
+            if (_player.IsSplit)
             {
-                TurnAction turnAction = OnGameTurn(new OnGameTurnArgs()
-                {
-                    Player = _player
-                });
-
-                if (turnAction == TurnAction.Hit)
-                {
-                    _player.Hand.AddCard(_deck.GetNextCard());
-                    OnGameHit(new OnGameHitArgs()
-                    {
-                        Player = _player
-                    });
-                }
-                else if (turnAction == TurnAction.Stay)
-                {
-                    OnGameStay(new OnGameStayArgs()
-                    {
-                        Player = _player
-                    });
-                    break;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Invalid TurnAction");
-                }
-            }
-
-            if(_player.SplitHand != null)
-            {
-                while (!_player.SplitHand.IsBust)
-                {
-                    TurnAction turnAction = OnGameTurn(new OnGameTurnArgs()
-                    {
-                        Player = _player
-                    });
-
-                    if (turnAction == TurnAction.Hit)
-                    {
-                        _player.SplitHand.AddCard(_deck.GetNextCard());
-                        OnGameHit(new OnGameHitArgs()
-                        {
-                            Player = _player
-                        });
-                    }
-                    else if (turnAction == TurnAction.Stay)
-                    {
-                        OnGameStay(new OnGameStayArgs()
-                        {
-                            Player = _player
-                        });
-                        break;
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Invalid TurnAction");
-                    }
-                }
+                ResolvePlayerHand(_player.SplitHand);
             }
 
             if (_player.Hand.IsBust)
@@ -193,6 +137,38 @@ namespace BlackJack
             {
                 Winner = winner
             });
+        }
+
+        private void ResolvePlayerHand(Hand hand)
+        {
+            while (!hand.IsBust)
+            {
+                TurnAction turnAction = OnGameTurn(new OnGameTurnArgs()
+                {
+                    Player = _player
+                });
+
+                if (turnAction == TurnAction.Hit)
+                {
+                    hand.AddCard(_deck.GetNextCard());
+                    OnGameHit(new OnGameHitArgs()
+                    {
+                        Player = _player
+                    });
+                }
+                else if (turnAction == TurnAction.Stay)
+                {
+                    OnGameStay(new OnGameStayArgs()
+                    {
+                        Player = _player
+                    });
+                    break;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Invalid TurnAction");
+                }
+            }
         }
     }
 
