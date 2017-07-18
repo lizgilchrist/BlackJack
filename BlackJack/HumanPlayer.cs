@@ -18,6 +18,8 @@ namespace BlackJack
             }
         }
 
+        public Hand SplitHand { get; set; }
+
         public HumanPlayer(string name)
         {
             _name = name;

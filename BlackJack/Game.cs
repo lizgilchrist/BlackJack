@@ -9,10 +9,10 @@ namespace BlackJack
     public class Game
     {
         //Events
-        private Player _player;
+        private HumanPlayer _player;
         private IDeck _deck;
 
-        public Game(Player player, IDeck deck)
+        public Game(HumanPlayer player, IDeck deck)
         {
             _player = player;
             _deck = deck;
@@ -46,10 +46,19 @@ namespace BlackJack
             List<Card> cards = _player.Hand.GetCards();
             if (cards[0].Face == cards[1].Face)
             {
-                OnGameSplit(new OnGameSplitArgs()
+                SplitAction splitAction = OnGameSplit(new OnGameSplitArgs()
                 {
                     Player = _player
                 });
+
+                if (splitAction == SplitAction.Yes)
+                {
+                    Hand splitHand = _player.Hand.Split();
+                    _player.Hand.AddCard(_deck.GetNextCard());
+                    splitHand.AddCard(_deck.GetNextCard());
+                    _player.SplitHand = splitHand;
+
+                }
             }
 
             while (!_player.Hand.IsBust)

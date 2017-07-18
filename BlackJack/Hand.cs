@@ -8,7 +8,6 @@ namespace BlackJack
 {
     public class Hand
     {
-        private static List<Card> __allCards = new List<Card>();
 
         private List<Card> _cards;
 
@@ -63,12 +62,19 @@ namespace BlackJack
 
         public void AddCard(Card card)
         {
-            if (__allCards.Contains(card))
-            {
-                throw new InvalidOperationException("Card has already been added to a hand");
-            }
-            __allCards.Add(card);
             _cards.Add(card);
+        }
+
+        public Hand Split()
+        {
+            var removedCard = _cards[1];
+            // Remove card from list
+             _cards.RemoveAt(1);
+            // Create new hand
+            Hand splitHand = new Hand();
+            splitHand.AddCard(removedCard);
+
+            return splitHand;
         }
     }
     
