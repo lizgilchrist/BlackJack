@@ -8,12 +8,13 @@ namespace BlackJack
 {
     public class Game
     {
-        //Events
+        private DealerPlayer _dealer;
         private HumanPlayer _player;
         private IDeck _deck;
 
         public Game(HumanPlayer player, IDeck deck)
         {
+            _dealer = new DealerPlayer();
             _player = player;
             _deck = deck;
         }
@@ -33,14 +34,13 @@ namespace BlackJack
             _player.Hand.AddCard(_deck.GetNextCard());
             _player.Hand.AddCard(_deck.GetNextCard());
 
-            DealerPlayer dealer = new DealerPlayer();
-            dealer.Hand = new Hand();
-            dealer.Hand.AddCard(_deck.GetNextCard());
+            _dealer.Hand = new Hand();
+            _dealer.Hand.AddCard(_deck.GetNextCard());
 
             OnGameStart(new OnGameStartArgs()
             {
                 Player = _player,
-                Dealer = dealer
+                Dealer = _dealer
             });
 
             List<Card> cards = _player.Hand.GetCards();
@@ -88,28 +88,28 @@ namespace BlackJack
             }
 
             Card holeCard = _deck.GetNextCard();
-            dealer.Hand.AddCard(holeCard);
+            _dealer.Hand.AddCard(holeCard);
             OnGameHoleCardReveal(new OnGameHoleCardRevealArgs()
             {
-                Dealer = dealer,
+                Dealer = _dealer,
                 HoleCard = holeCard
             });
 
-            while (dealer.Hand.Value < 17 && dealer.Hand.Value < _player.Hand.Value)
+            while (_dealer.Hand.Value < 17 && _dealer.Hand.Value < _player.Hand.Value)
             {
-                dealer.Hand.AddCard(_deck.GetNextCard());
+                _dealer.Hand.AddCard(_deck.GetNextCard());
                 OnGameHit(new OnGameHitArgs()
                 {
-                    Player = dealer
+                    Player = _dealer
                 });
 
             }
 
-            if (!dealer.Hand.IsBust)
+            if (!_dealer.Hand.IsBust)
             {
                 OnGameStay(new OnGameStayArgs()
                 {
-                    Player = dealer
+                    Player = _dealer
                 });
             }
 
@@ -117,18 +117,28 @@ namespace BlackJack
             {
                 OnGameBust(new OnGameBustArgs()
                 {
-                    Dealer = dealer,
-                    BustHand = dealer.Hand
+                    Dealer = _dealer,
+                    BustHand = _dealer.Hand
                 });
             }
 
+            ResolvePlayerGame(_player.Hand);
+
+            if (_player.IsSplit)
+            {
+                ResolvePlayerGame(_player.SplitHand);
+            }
+        }
+
+        private void ResolvePlayerGame(Hand hand)
+        {
             Player winner = null;
 
-            if (dealer.Hand.Value > _player.Hand.Value)
+            if (_dealer.Hand.Value > hand.Value)
             {
-                winner = dealer;
+                winner = _dealer;
             }
-            else if (dealer.Hand.Value < _player.Hand.Value)
+            else if (_dealer.Hand.Value < hand.Value)
             {
                 winner = _player;
             }

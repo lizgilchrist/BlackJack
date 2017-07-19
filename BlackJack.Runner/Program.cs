@@ -17,7 +17,7 @@ namespace BlackJack.Runner
                 new Card(Suit.Clubs, Face.Eight),
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Hearts, Face.Eight),
-                new Card(Suit.Hearts, Face.Seven)
+                new Card(Suit.Hearts, Face.Ten)
 
                 ));
 

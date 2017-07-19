@@ -68,9 +68,7 @@ namespace BlackJack
         public Hand Split()
         {
             var removedCard = _cards[1];
-            // Remove card from list
              _cards.RemoveAt(1);
-            // Create new hand
             Hand splitHand = new Hand();
             splitHand.AddCard(removedCard);
 
