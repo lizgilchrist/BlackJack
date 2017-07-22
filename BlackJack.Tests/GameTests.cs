@@ -141,11 +141,11 @@ namespace BlackJack.Tests
         }
 
         [Fact]
-        public void TestPlayerWins()
+        public void TestPlayerHandWins()
         {
             var game = CreateGame(new MockDeck(
                 new Card(Suit.Clubs, Face.Ten),
-                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Nine),
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Clubs, Face.Eight)
                 ));
@@ -155,19 +155,27 @@ namespace BlackJack.Tests
                 return TurnAction.Stay;
             };
 
-            bool onGameEndPlayerWins = false;
+            bool onGameEndPlayerHandWins = false;
 
-            game.OnGameEnd += (ev) =>
+            game.OnGameHandResult += (ev) =>
             {
-                if (ev.Winner.Name == "Player")
+                if (ev.Result == HandResult.Win)
                 {
-                    onGameEndPlayerWins = true;
+                    onGameEndPlayerHandWins = true;
                 }
             };
 
+            /*game.OnGameEnd += (ev) =>
+            {
+                if (ev.Winner.Name == "Player")
+                {
+                    onGameEndPlayerHandWins = true;
+                }
+            };
+            */
             game.Start();
 
-            Assert.True(onGameEndPlayerWins);
+            Assert.True(onGameEndPlayerHandWins);
         }
 
 
@@ -188,27 +196,35 @@ namespace BlackJack.Tests
 
             bool onGameEndDealerWins = false;
 
-            game.OnGameEnd += (ev) =>
+            game.OnGameHandResult += (ev) =>
+            {
+                if (ev.Result == HandResult.Lose)
+                {
+                    onGameEndDealerWins = true;
+                }
+            };
+
+            /*game.OnGameEnd += (ev) =>
             {
                 if (ev.Winner.Name == "Dealer")
                 {
                     onGameEndDealerWins = true;
                 }
             };
-
+            */
             game.Start();
 
             Assert.True(onGameEndDealerWins);
         }
 
         [Fact]
-        public void TestGameIsTie()
+        public void TestGameHandIsTie()
         {
             var game = CreateGame(new MockDeck(
                 new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Clubs, Face.Eight),
                 new Card(Suit.Clubs, Face.Ten),
-                new Card(Suit.Clubs, Face.Ten),
-                new Card(Suit.Clubs, Face.Ten)
+                new Card(Suit.Clubs, Face.Eight)
                 ));
 
             game.OnGameTurn += ev =>
@@ -216,19 +232,24 @@ namespace BlackJack.Tests
                 return TurnAction.Stay;
             };
 
-            bool onGameEndTie = false;
+            bool onGameEndHandTie = false;
 
-            game.OnGameEnd += (ev) =>
+            game.OnGameHandResult += (ev) =>
+            {
+                onGameEndHandTie = true;
+            };
+
+            /*game.OnGameEnd += (ev) =>
             {
                 if (ev.Winner == null)
                 {
-                    onGameEndTie = true;
+                    onGameEndHandTie = true;
                 }
             };
-
+            */
             game.Start();
 
-            Assert.True(onGameEndTie);
+            Assert.True(onGameEndHandTie);
         }
 
         [Fact]

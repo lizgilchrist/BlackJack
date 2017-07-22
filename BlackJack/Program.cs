@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace BlackJack
 {
     //Doubling down: Is allowed straight after the first two cards are dealt - The player will get one more card. They cannot ask for any more hits after this third card.
-    //Split: If you two cards with the same value then you can split them into two separate hands - You will get hit once with both hands. NOTE: If you split Aces you get 1 card only
     //Surrender: Is when the dealers first card is either an Ace or a 10 value - A player who surrenders gives half their bet to the house. The round ends and a new round starts.
     //Insurance: When the dealers first card is an Ace - The player can 'take insurance' against the chance that the dealer has blackjack.
     
@@ -52,11 +51,6 @@ namespace BlackJack
             {
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
                 string userInput = Console.ReadLine();
-
-                if (ev.Player.IsSplit)
-                {
-                    //Player's hand is split
-                }
 
                 if (userInput == "Hit")
                 {
@@ -114,16 +108,28 @@ namespace BlackJack
                 Console.WriteLine("The total for " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
             };
 
-            game.OnGameEnd += (ev) =>
+            game.OnGameHandResult += (ev) =>
             {
-                if (ev.Winner == null)
+                if(ev.Result == HandResult.Tie)
                 {
                     Console.WriteLine("It's a tie!");
                 }
-                else
+                else if(ev.Result == HandResult.Win)
                 {
-                    Console.WriteLine(ev.Winner.Name + " wins!");
+                    Console.WriteLine(ev.Player.Name + "Win's");
                 }
+                else if(ev.Result == HandResult.Lose)
+                {
+                    Console.WriteLine(ev.Player.Name + "Lost");
+                }
+
+                throw new Exception("TODO: Need to handle bad input from user");
+
+            };
+
+            game.OnGameEnd += (ev) =>
+            {
+                Console.WriteLine("Game is over");
             };
 
             game.Start();

@@ -26,6 +26,7 @@ namespace BlackJack
         public event Action<OnGameStayArgs> OnGameStay;
         public event Action<OnGameBustArgs> OnGameBust;
         public event Action<OnGameHoleCardRevealArgs> OnGameHoleCardReveal;
+        public event Action<OnGameHandResultArgs> OnGameHandResult;
         public event Action<OnGameEndArgs> OnGameEnd;
 
         public void Start()
@@ -60,11 +61,18 @@ namespace BlackJack
                 }
             }
 
-            ResolvePlayerHand(_player.Hand);
+            bool isFirstHandAce = cards[0].Face == Face.Ace;
+            List<Card> splitHandCards = _player.SplitHand.GetCards();
+            bool isSplitHandAce = splitHandCards[0].Face == Face.Ace;
 
-            if (_player.IsSplit)
+            if(!(isFirstHandAce && isSplitHandAce))
             {
-                ResolvePlayerHand(_player.SplitHand);
+                ResolvePlayerHand(_player.Hand);
+
+                if (_player.IsSplit)
+                {
+                    ResolvePlayerHand(_player.SplitHand);
+                }
             }
 
             if (_player.Hand.IsBust)
@@ -122,15 +130,45 @@ namespace BlackJack
                 });
             }
 
-            ResolvePlayerGame(_player.Hand);
+            ResolveGameResult(_player.Hand);
 
-            if (_player.IsSplit)
+            if(_player.IsSplit)
             {
-                ResolvePlayerGame(_player.SplitHand);
+                ResolveGameResult(_player.SplitHand);
             }
+
+            OnGameEnd(new OnGameEndArgs());
+
         }
 
-        private void ResolvePlayerGame(Hand hand)
+        private void ResolveGameResult(Hand hand)
+        {
+            HandResult result = HandResult.Unknown;
+
+            if (_dealer.Hand.Value > hand.Value)
+            {
+                result = HandResult.Lose;
+            }
+            else if (_dealer.Hand.Value < hand.Value)
+            {
+                result = HandResult.Win;
+            }
+            else
+            {
+                result = HandResult.Tie;
+            }
+
+            OnGameHandResult(new OnGameHandResultArgs()
+            {
+                Result = result,
+                Player = _player,
+                Hand = hand
+
+            });
+
+        }
+
+        /*private void ResolvePlayerGame(Hand hand)
         {
             Player winner = null;
 
@@ -148,7 +186,7 @@ namespace BlackJack
                 Winner = winner
             });
         }
-
+        */
         private void ResolvePlayerHand(Hand hand)
         {
             while (!hand.IsBust)
@@ -225,8 +263,17 @@ namespace BlackJack
         public Card HoleCard { get; set; }
     }
 
+    public class OnGameHandResultArgs
+    {
+        public Hand Hand { get; set; }
+
+        public HandResult Result { get; set; }
+
+        public Player Player { get; set; }
+    }
+
     public class OnGameEndArgs
     {
-        public Player Winner { get; set; }
+        
     }
 }

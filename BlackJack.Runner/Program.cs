@@ -12,8 +12,8 @@ namespace BlackJack.Runner
         static void Main(string[] args)
         {
             var game = CreateGame(new MockDeck(
-                new Card(Suit.Diamonds, Face.Ten),
-                new Card(Suit.Clubs, Face.Ten),
+                new Card(Suit.Diamonds, Face.Eight),
+                new Card(Suit.Clubs, Face.Eight),
                 new Card(Suit.Clubs, Face.Eight),
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Hearts, Face.Eight),
@@ -34,6 +34,7 @@ namespace BlackJack.Runner
             game.OnGameBust += (ev) => { };
             game.OnGameTurn += (ev) => { return TurnAction.Stay;};
             game.OnGameHoleCardReveal += (ev) => { };
+            game.OnGameHandResult += (ev) => { };
             game.OnGameEnd += (ev) => { };
             return game;
         }
