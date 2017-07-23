@@ -116,7 +116,7 @@ namespace BlackJack.Tests
             bool onGameBustTriggered = false;
             game.OnGameBust += (ev) =>
             {
-                if (ev.Player.Name == "Dealer")
+                if (ev.Dealer != null)
                 {
                     onGameBustTriggered = true;
                 }
@@ -136,6 +136,7 @@ namespace BlackJack.Tests
             game.OnGameStay += (ev) => { };
             game.OnGameBust += (ev) => { };
             game.OnGameHoleCardReveal += (ev) => { };
+            game.OnGameHandResult += (ev) => { };
             game.OnGameEnd += (ev) => { };
             return game;
         }
@@ -165,14 +166,6 @@ namespace BlackJack.Tests
                 }
             };
 
-            /*game.OnGameEnd += (ev) =>
-            {
-                if (ev.Winner.Name == "Player")
-                {
-                    onGameEndPlayerHandWins = true;
-                }
-            };
-            */
             game.Start();
 
             Assert.True(onGameEndPlayerHandWins);
@@ -204,14 +197,6 @@ namespace BlackJack.Tests
                 }
             };
 
-            /*game.OnGameEnd += (ev) =>
-            {
-                if (ev.Winner.Name == "Dealer")
-                {
-                    onGameEndDealerWins = true;
-                }
-            };
-            */
             game.Start();
 
             Assert.True(onGameEndDealerWins);
@@ -236,17 +221,13 @@ namespace BlackJack.Tests
 
             game.OnGameHandResult += (ev) =>
             {
-                onGameEndHandTie = true;
-            };
-
-            /*game.OnGameEnd += (ev) =>
-            {
-                if (ev.Winner == null)
+                if(ev.Result == HandResult.Tie)
                 {
                     onGameEndHandTie = true;
                 }
+                
             };
-            */
+
             game.Start();
 
             Assert.True(onGameEndHandTie);

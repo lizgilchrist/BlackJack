@@ -61,18 +61,22 @@ namespace BlackJack
                 }
             }
 
-            bool isFirstHandAce = cards[0].Face == Face.Ace;
-            List<Card> splitHandCards = _player.SplitHand.GetCards();
-            bool isSplitHandAce = splitHandCards[0].Face == Face.Ace;
+            if(_player.IsSplit)
+            {
+                bool isFirstHandAce = cards[0].Face == Face.Ace;
+                List<Card> splitHandCards = _player.SplitHand.GetCards();
+                bool isSplitHandAce = splitHandCards[0].Face == Face.Ace;
 
-            if(!(isFirstHandAce && isSplitHandAce))
+                if (!isFirstHandAce || !isSplitHandAce)
+                {
+                    ResolvePlayerHand(_player.Hand);
+                    ResolvePlayerHand(_player.SplitHand);
+     
+                }
+            }
+            else
             {
                 ResolvePlayerHand(_player.Hand);
-
-                if (_player.IsSplit)
-                {
-                    ResolvePlayerHand(_player.SplitHand);
-                }
             }
 
             if (_player.Hand.IsBust)
@@ -85,7 +89,7 @@ namespace BlackJack
                 return;
             }
 
-            if (_player.SplitHand.IsBust)
+            if (_player.IsSplit && _player.SplitHand.IsBust)
             {
                 OnGameBust(new OnGameBustArgs()
                 {
@@ -168,25 +172,6 @@ namespace BlackJack
 
         }
 
-        /*private void ResolvePlayerGame(Hand hand)
-        {
-            Player winner = null;
-
-            if (_dealer.Hand.Value > hand.Value)
-            {
-                winner = _dealer;
-            }
-            else if (_dealer.Hand.Value < hand.Value)
-            {
-                winner = _player;
-            }
-
-            OnGameEnd(new OnGameEndArgs()
-            {
-                Winner = winner
-            });
-        }
-        */
         private void ResolvePlayerHand(Hand hand)
         {
             while (!hand.IsBust)
