@@ -7,100 +7,100 @@ using Xunit;
 
 namespace BlackJack.Tests
 {
-    public class GameTests
+    public class RoundTests
     {
         [Fact]
         public void HitTriggersHitEvent()
         {
-            Game game = CreateGame(new Deck());
+            Round round = CreateRound(new Deck());
 
-            game.OnGameTurn += (ev) =>
+            round.OnRoundTurn += (ev) =>
             {
                 return TurnAction.Hit;
             };
 
-            bool onGameHitTriggered = false;
-            game.OnGameHit += (ev) =>
+            bool onRoundHitTriggered = false;
+            round.OnRoundHit += (ev) =>
             {
-                onGameHitTriggered = true;
+                onRoundHitTriggered = true;
             };
 
-            bool onGameStayTriggered = false;
-            game.OnGameStay += (ev) =>
+            bool onRoundStayTriggered = false;
+            round.OnRoundStay += (ev) =>
             {
-                onGameStayTriggered = true;
+                onRoundStayTriggered = true;
             };
 
-            game.Start();
-            Assert.True(onGameHitTriggered);
-            Assert.False(onGameStayTriggered);
+            round.Start();
+            Assert.True(onRoundHitTriggered);
+            Assert.False(onRoundStayTriggered);
         }
 
         [Fact]
         public void StayTriggeredStayEvent()
         {
-            Game game = CreateGame(new Deck());
+            Round round = CreateRound(new Deck());
 
-            game.OnGameTurn += (ev) =>
+            round.OnRoundTurn += (ev) =>
             {
                 return TurnAction.Stay;
             };
 
-            bool onGameHitTriggered = false;
-            game.OnGameHit += (ev) =>
+            bool onRoundHitTriggered = false;
+            round.OnRoundHit += (ev) =>
             {
                 if (ev.Player.Name == "Player")
                 {
-                    onGameHitTriggered = true;
+                    onRoundHitTriggered = true;
                 }
             };
 
-            bool onGameStayTriggered = false;
-            game.OnGameStay += (ev) =>
+            bool onRoundStayTriggered = false;
+            round.OnRoundStay += (ev) =>
             {
                 if (ev.Player.Name == "Player")
                 {
-                    onGameStayTriggered = true;
+                    onRoundStayTriggered = true;
                 }
             };
 
-            game.Start();
-            Assert.False(onGameHitTriggered);
-            Assert.True(onGameStayTriggered);
+            round.Start();
+            Assert.False(onRoundHitTriggered);
+            Assert.True(onRoundStayTriggered);
         }
 
         [Fact]
         public void TestPlayerBustWithThreeKings()
         {
-            var game = CreateGame(new MockDeck(
+            var round = CreateRound(new MockDeck(
                 new Card(Suit.Clubs, Face.King),
                 new Card(Suit.Clubs, Face.King),
                 new Card(Suit.Clubs, Face.King),
                 new Card(Suit.Clubs, Face.King)));
 
-            game.OnGameTurn += ev =>
+            round.OnRoundTurn += ev =>
             {
                 return TurnAction.Hit;
             };
 
-            bool onGameBustTriggered = false;
-            game.OnGameBust += (ev) =>
+            bool onRoundBustTriggered = false;
+            round.OnRoundBust += (ev) =>
             {
                 if (ev.Player.Name == "Player")
                 {
-                    onGameBustTriggered = true;
+                    onRoundBustTriggered = true;
                 }
             };
 
-            game.Start();
+            round.Start();
 
-            Assert.True(onGameBustTriggered);
+            Assert.True(onRoundBustTriggered);
         }
 
         [Fact]
         public void TestDealerBust()
         {
-            var game = CreateGame(new MockDeck(
+            var round = CreateRound(new MockDeck(
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Clubs, Face.Six),
                 new Card(Suit.Clubs, Face.Ten),
@@ -108,135 +108,135 @@ namespace BlackJack.Tests
                 new Card(Suit.Clubs, Face.King)
                 ));
 
-            game.OnGameTurn += ev =>
+            round.OnRoundTurn += ev =>
             {
                 return TurnAction.Stay;
             };
 
-            bool onGameBustTriggered = false;
-            game.OnGameBust += (ev) =>
+            bool onRoundBustTriggered = false;
+            round.OnRoundBust += (ev) =>
             {
                 if (ev.Dealer != null)
                 {
-                    onGameBustTriggered = true;
+                    onRoundBustTriggered = true;
                 }
             };
 
-            game.Start();
+            round.Start();
 
-            Assert.True(onGameBustTriggered);
+            Assert.True(onRoundBustTriggered);
         }
 
-        public Game CreateGame(IDeck deck)
+        public Round CreateRound(IDeck deck)
         {
-            Game game = new Game(new HumanPlayer("Player"), deck);
-            game.OnGameStart += (ev) => { };
-            game.OnGameSplit += (ev) => { return SplitAction.No; };
-            game.OnGameHit += (ev) => { };
-            game.OnGameStay += (ev) => { };
-            game.OnGameBust += (ev) => { };
-            game.OnGameHoleCardReveal += (ev) => { };
-            game.OnGameHandResult += (ev) => { };
-            game.OnGameEnd += (ev) => { };
-            return game;
+            Round round = new Round(new HumanPlayer("Player"), deck);
+            round.OnRoundStart += (ev) => { };
+            round.OnRoundSplit += (ev) => { return SplitAction.No; };
+            round.OnRoundHit += (ev) => { };
+            round.OnRoundStay += (ev) => { };
+            round.OnRoundBust += (ev) => { };
+            round.OnRoundHoleCardReveal += (ev) => { };
+            round.OnRoundHandResult += (ev) => { };
+            round.OnRoundEnd += (ev) => { };
+            return round;
         }
 
         [Fact]
         public void TestPlayerHandWins()
         {
-            var game = CreateGame(new MockDeck(
+            var round = CreateRound(new MockDeck(
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Clubs, Face.Nine),
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Clubs, Face.Eight)
                 ));
 
-            game.OnGameTurn += ev =>
+            round.OnRoundTurn += ev =>
             {
                 return TurnAction.Stay;
             };
 
-            bool onGameEndPlayerHandWins = false;
+            bool onRoundEndPlayerHandWins = false;
 
-            game.OnGameHandResult += (ev) =>
+            round.OnRoundHandResult += (ev) =>
             {
                 if (ev.Result == HandResult.Win)
                 {
-                    onGameEndPlayerHandWins = true;
+                    onRoundEndPlayerHandWins = true;
                 }
             };
 
-            game.Start();
+            round.Start();
 
-            Assert.True(onGameEndPlayerHandWins);
+            Assert.True(onRoundEndPlayerHandWins);
         }
 
 
         [Fact]
         public void TestDealerWins()
         {
-            var game = CreateGame(new MockDeck(
+            var round = CreateRound(new MockDeck(
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Clubs, Face.Eight),
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Clubs, Face.Ten)
                 ));
 
-            game.OnGameTurn += ev =>
+            round.OnRoundTurn += ev =>
             {
                 return TurnAction.Stay;
             };
 
-            bool onGameEndDealerWins = false;
+            bool onRoundEndDealerWins = false;
 
-            game.OnGameHandResult += (ev) =>
+            round.OnRoundHandResult += (ev) =>
             {
                 if (ev.Result == HandResult.Lose)
                 {
-                    onGameEndDealerWins = true;
+                    onRoundEndDealerWins = true;
                 }
             };
 
-            game.Start();
+            round.Start();
 
-            Assert.True(onGameEndDealerWins);
+            Assert.True(onRoundEndDealerWins);
         }
 
         [Fact]
-        public void TestGameHandIsTie()
+        public void TestRoundHandIsTie()
         {
-            var game = CreateGame(new MockDeck(
+            var round = CreateRound(new MockDeck(
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Clubs, Face.Eight),
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Clubs, Face.Eight)
                 ));
 
-            game.OnGameTurn += ev =>
+            round.OnRoundTurn += ev =>
             {
                 return TurnAction.Stay;
             };
 
-            bool onGameEndHandTie = false;
+            bool onRoundEndHandTie = false;
 
-            game.OnGameHandResult += (ev) =>
+            round.OnRoundHandResult += (ev) =>
             {
                 if(ev.Result == HandResult.Tie)
                 {
-                    onGameEndHandTie = true;
+                    onRoundEndHandTie = true;
                 }
                 
             };
 
-            game.Start();
+            round.Start();
 
-            Assert.True(onGameEndHandTie);
+            Assert.True(onRoundEndHandTie);
         }
 
         [Fact]
         public void TestPlayerOfferedSplit()
         {
-            var game = CreateGame(new MockDeck(
+            var round = CreateRound(new MockDeck(
                 new Card(Suit.Diamonds, Face.Ten),
                 new Card(Suit.Clubs, Face.Ten),
                 new Card(Suit.Clubs, Face.Eight),
@@ -245,7 +245,7 @@ namespace BlackJack.Tests
                 ));
 
             bool playerOfferedSplit = false;
-            game.OnGameSplit += (ev) =>
+            round.OnRoundSplit += (ev) =>
             {
                 if(ev.Player.Name == "Player")
                 {
@@ -254,9 +254,9 @@ namespace BlackJack.Tests
                 return SplitAction.No;
             };
 
-            game.OnGameTurn += (ev) => { return TurnAction.Stay;};
+            round.OnRoundTurn += (ev) => { return TurnAction.Stay;};
 
-            game.Start();
+            round.Start();
 
             Assert.True(playerOfferedSplit);
 

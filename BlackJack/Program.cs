@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlackJack
 {
+    //Payouts: BlackJack 3:2, Win 1:1, Push/Tie - no money exchanged, Split becomes two separate bets half of the original bet.
     //Doubling down: Is allowed straight after the first two cards are dealt - The player will get one more card. They cannot ask for any more hits after this third card.
     //Surrender: Is when the dealers first card is either an Ace or a 10 value - A player who surrenders gives half their bet to the house. The round ends and a new round starts.
     //Insurance: When the dealers first card is an Ace - The player can 'take insurance' against the chance that the dealer has blackjack.
@@ -16,13 +17,13 @@ namespace BlackJack
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            Game game = new Game(
+            Round round = new Round(
                 new HumanPlayer(Console.ReadLine()),
                 new Deck());
 
-            game.OnGameStart += (ev) =>
+            round.OnRoundStart += (ev) =>
             {
-                Console.WriteLine("Let the game begin!");
+                Console.WriteLine("Let the round begin!");
                 PrintHand(ev.Player);
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Player.Hand.Value);
 
@@ -30,7 +31,7 @@ namespace BlackJack
                 Console.WriteLine("The total for the " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
             };
 
-            game.OnGameSplit += (ev) =>
+            round.OnRoundSplit += (ev) =>
             {
                 Console.WriteLine("Would you like to split?");
                 string userInput = Console.ReadLine();
@@ -47,7 +48,7 @@ namespace BlackJack
                 throw new Exception("TODO: Need to handle bad input from user");
             };
 
-            game.OnGameTurn += (ev) =>
+            round.OnRoundTurn += (ev) =>
             {
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
                 string userInput = Console.ReadLine();
@@ -64,18 +65,18 @@ namespace BlackJack
                 throw new Exception("TODO: Need to handle bad input from user");
             };
 
-            game.OnGameHit += (ev) =>
+            round.OnRoundHit += (ev) =>
             {
                 PrintHand(ev.Player);
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand now is " + ev.Player.Hand.Value);
             };
 
-            game.OnGameStay += (ev) =>
+            round.OnRoundStay += (ev) =>
             {
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand stays as " + ev.Player.Hand.Value);
             };
 
-            game.OnGameBust += (ev) =>
+            round.OnRoundBust += (ev) =>
             {
                 if (ev.Player == null)
                 {
@@ -102,13 +103,13 @@ namespace BlackJack
                 
             };
 
-            game.OnGameHoleCardReveal += (ev) =>
+            round.OnRoundHoleCardReveal += (ev) =>
             {
                 PrintHand(ev.Dealer);
                 Console.WriteLine("The total for " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
             };
 
-            game.OnGameHandResult += (ev) =>
+            round.OnRoundHandResult += (ev) =>
             {
                 if(ev.Result == HandResult.Tie)
                 {
@@ -127,12 +128,12 @@ namespace BlackJack
 
             };
 
-            game.OnGameEnd += (ev) =>
+            round.OnRoundEnd += (ev) =>
             {
-                Console.WriteLine("Game is over");
+                Console.WriteLine("Round is over");
             };
 
-            game.Start();
+            round.Start();
            
         }
 

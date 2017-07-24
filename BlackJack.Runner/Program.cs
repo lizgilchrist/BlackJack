@@ -11,7 +11,7 @@ namespace BlackJack.Runner
     {
         static void Main(string[] args)
         {
-            var game = CreateGame(new MockDeck(
+            var round = CreateRound(new MockDeck(
                 new Card(Suit.Diamonds, Face.Eight),
                 new Card(Suit.Clubs, Face.Eight),
                 new Card(Suit.Clubs, Face.Eight),
@@ -21,22 +21,22 @@ namespace BlackJack.Runner
 
                 ));
 
-            game.Start();
+            round.Start();
         }
 
-        public static Game CreateGame(IDeck deck)
+        public static Round CreateRound(IDeck deck)
         {
-            Game game = new Game(new HumanPlayer("Player"), deck);
-            game.OnGameStart += (ev) => { };
-            game.OnGameSplit += (ev) => { return SplitAction.Yes; };
-            game.OnGameHit += (ev) => { };
-            game.OnGameStay += (ev) => { };
-            game.OnGameBust += (ev) => { };
-            game.OnGameTurn += (ev) => { return TurnAction.Stay;};
-            game.OnGameHoleCardReveal += (ev) => { };
-            game.OnGameHandResult += (ev) => { };
-            game.OnGameEnd += (ev) => { };
-            return game;
+            Round round = new Round(new HumanPlayer("Player"), deck);
+            round.OnRoundStart += (ev) => { };
+            round.OnRoundSplit += (ev) => { return SplitAction.Yes; };
+            round.OnRoundHit += (ev) => { };
+            round.OnRoundStay += (ev) => { };
+            round.OnRoundBust += (ev) => { };
+            round.OnRoundTurn += (ev) => { return TurnAction.Stay;};
+            round.OnRoundHoleCardReveal += (ev) => { };
+            round.OnRoundHandResult += (ev) => { };
+            round.OnRoundEnd += (ev) => { };
+            return round;
         }
     }
 }

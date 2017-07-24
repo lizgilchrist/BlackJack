@@ -6,28 +6,28 @@ using System.Threading.Tasks;
 
 namespace BlackJack
 {
-    public class Game
+    public class Round
     {
         private DealerPlayer _dealer;
         private HumanPlayer _player;
         private IDeck _deck;
 
-        public Game(HumanPlayer player, IDeck deck)
+        public Round(HumanPlayer player, IDeck deck)
         {
             _dealer = new DealerPlayer();
             _player = player;
             _deck = deck;
         }
 
-        public event Action<OnGameStartArgs> OnGameStart;
-        public event Func<OnGameSplitArgs, SplitAction> OnGameSplit;
-        public event Func<OnGameTurnArgs, TurnAction> OnGameTurn;
-        public event Action<OnGameHitArgs> OnGameHit;
-        public event Action<OnGameStayArgs> OnGameStay;
-        public event Action<OnGameBustArgs> OnGameBust;
-        public event Action<OnGameHoleCardRevealArgs> OnGameHoleCardReveal;
-        public event Action<OnGameHandResultArgs> OnGameHandResult;
-        public event Action<OnGameEndArgs> OnGameEnd;
+        public event Action<OnRoundStartArgs> OnRoundStart;
+        public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
+        public event Func<OnRoundTurnArgs, TurnAction> OnRoundTurn;
+        public event Action<OnRoundHitArgs> OnRoundHit;
+        public event Action<OnRoundStayArgs> OnRoundStay;
+        public event Action<OnRoundBustArgs> OnRoundBust;
+        public event Action<OnRoundHoleCardRevealArgs> OnRoundHoleCardReveal;
+        public event Action<OnRoundHandResultArgs> OnRoundHandResult;
+        public event Action<OnRoundEndArgs> OnRoundEnd;
 
         public void Start()
         {
@@ -38,7 +38,7 @@ namespace BlackJack
             _dealer.Hand = new Hand();
             _dealer.Hand.AddCard(_deck.GetNextCard());
 
-            OnGameStart(new OnGameStartArgs()
+            OnRoundStart(new OnRoundStartArgs()
             {
                 Player = _player,
                 Dealer = _dealer
@@ -47,7 +47,7 @@ namespace BlackJack
             List<Card> cards = _player.Hand.GetCards();
             if (cards[0].Face == cards[1].Face)
             {
-                SplitAction splitAction = OnGameSplit(new OnGameSplitArgs()
+                SplitAction splitAction = OnRoundSplit(new OnRoundSplitArgs()
                 {
                     Player = _player
                 });
@@ -81,7 +81,7 @@ namespace BlackJack
 
             if (_player.Hand.IsBust)
             {
-                OnGameBust(new OnGameBustArgs()
+                OnRoundBust(new OnRoundBustArgs()
                 {
                     Player = _player,
                     BustHand = _player.Hand
@@ -91,7 +91,7 @@ namespace BlackJack
 
             if (_player.IsSplit && _player.SplitHand.IsBust)
             {
-                OnGameBust(new OnGameBustArgs()
+                OnRoundBust(new OnRoundBustArgs()
                 {
                     Player = _player,
                     BustHand = _player.SplitHand
@@ -101,7 +101,7 @@ namespace BlackJack
 
             Card holeCard = _deck.GetNextCard();
             _dealer.Hand.AddCard(holeCard);
-            OnGameHoleCardReveal(new OnGameHoleCardRevealArgs()
+            OnRoundHoleCardReveal(new OnRoundHoleCardRevealArgs()
             {
                 Dealer = _dealer,
                 HoleCard = holeCard
@@ -110,7 +110,7 @@ namespace BlackJack
             while (_dealer.Hand.Value < 17 && _dealer.Hand.Value < _player.Hand.Value)
             {
                 _dealer.Hand.AddCard(_deck.GetNextCard());
-                OnGameHit(new OnGameHitArgs()
+                OnRoundHit(new OnRoundHitArgs()
                 {
                     Player = _dealer
                 });
@@ -119,7 +119,7 @@ namespace BlackJack
 
             if (!_dealer.Hand.IsBust)
             {
-                OnGameStay(new OnGameStayArgs()
+                OnRoundStay(new OnRoundStayArgs()
                 {
                     Player = _dealer
                 });
@@ -127,25 +127,25 @@ namespace BlackJack
 
             else
             {
-                OnGameBust(new OnGameBustArgs()
+                OnRoundBust(new OnRoundBustArgs()
                 {
                     Dealer = _dealer,
                     BustHand = _dealer.Hand
                 });
             }
 
-            ResolveGameResult(_player.Hand);
+            ResolveRoundResult(_player.Hand);
 
             if(_player.IsSplit)
             {
-                ResolveGameResult(_player.SplitHand);
+                ResolveRoundResult(_player.SplitHand);
             }
 
-            OnGameEnd(new OnGameEndArgs());
+            OnRoundEnd(new OnRoundEndArgs());
 
         }
 
-        private void ResolveGameResult(Hand hand)
+        private void ResolveRoundResult(Hand hand)
         {
             HandResult result = HandResult.Unknown;
 
@@ -162,7 +162,7 @@ namespace BlackJack
                 result = HandResult.Tie;
             }
 
-            OnGameHandResult(new OnGameHandResultArgs()
+            OnRoundHandResult(new OnRoundHandResultArgs()
             {
                 Result = result,
                 Player = _player,
@@ -176,7 +176,7 @@ namespace BlackJack
         {
             while (!hand.IsBust)
             {
-                TurnAction turnAction = OnGameTurn(new OnGameTurnArgs()
+                TurnAction turnAction = OnRoundTurn(new OnRoundTurnArgs()
                 {
                     Player = _player
                 });
@@ -184,14 +184,14 @@ namespace BlackJack
                 if (turnAction == TurnAction.Hit)
                 {
                     hand.AddCard(_deck.GetNextCard());
-                    OnGameHit(new OnGameHitArgs()
+                    OnRoundHit(new OnRoundHitArgs()
                     {
                         Player = _player
                     });
                 }
                 else if (turnAction == TurnAction.Stay)
                 {
-                    OnGameStay(new OnGameStayArgs()
+                    OnRoundStay(new OnRoundStayArgs()
                     {
                         Player = _player
                     });
@@ -205,34 +205,34 @@ namespace BlackJack
         }
     }
 
-    public class OnGameStartArgs
+    public class OnRoundStartArgs
     {
         public Player Dealer { get; set; }
 
         public Player Player { get; set; }
     }
 
-    public class OnGameSplitArgs
+    public class OnRoundSplitArgs
     {
         public HumanPlayer Player { get; set; }
     }
 
-    public class OnGameTurnArgs
+    public class OnRoundTurnArgs
     {
         public HumanPlayer Player { get; set; }
     }
 
-    public class OnGameHitArgs
+    public class OnRoundHitArgs
     {
         public Player Player { get; set; } 
     }
 
-    public class OnGameStayArgs
+    public class OnRoundStayArgs
     {
         public Player Player { get; set; }
     }
 
-    public class OnGameBustArgs
+    public class OnRoundBustArgs
     {
         public DealerPlayer Dealer { get; set; }
 
@@ -241,14 +241,14 @@ namespace BlackJack
         public Hand BustHand { get; set; }
     }
 
-    public class OnGameHoleCardRevealArgs
+    public class OnRoundHoleCardRevealArgs
     {
         public Player Dealer { get; set; }
 
         public Card HoleCard { get; set; }
     }
 
-    public class OnGameHandResultArgs
+    public class OnRoundHandResultArgs
     {
         public Hand Hand { get; set; }
 
@@ -257,7 +257,7 @@ namespace BlackJack
         public Player Player { get; set; }
     }
 
-    public class OnGameEndArgs
+    public class OnRoundEndArgs
     {
         
     }
