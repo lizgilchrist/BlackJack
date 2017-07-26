@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace BlackJack
 {
-    //Payouts: BlackJack 3:2, Win 1:1, Push/Tie - no money exchanged, Split becomes two separate bets half of the original bet.
     //Doubling down: Is allowed straight after the first two cards are dealt - The player will get one more card. They cannot ask for any more hits after this third card.
     //Surrender: Is when the dealers first card is either an Ace or a 10 value - A player who surrenders gives half their bet to the house. The round ends and a new round starts.
     //Insurance: When the dealers first card is an Ace - The player can 'take insurance' against the chance that the dealer has blackjack.
@@ -17,13 +16,36 @@ namespace BlackJack
         {
             Console.OutputEncoding = Encoding.UTF8;
 
+            Game game = new Game(
+                new HumanPlayer(Console.ReadLine()),
+                new Deck());
+
+            game.OnRoundStart += (ev) =>
+            {
+                Console.WriteLine("The round has started!");
+                PrintHand(ev.Player);
+                Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Player.Hand.Value);
+
+                PrintHand(ev.Dealer);
+                Console.WriteLine("The total for the " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
+            };
+
+            game.Start();
+
+            return;
+
+
+
+            // Old code:
+
+
             Round round = new Round(
                 new HumanPlayer(Console.ReadLine()),
                 new Deck());
 
             round.OnRoundStart += (ev) =>
             {
-                Console.WriteLine("Let the round begin!");
+                Console.WriteLine("The round has started!");
                 PrintHand(ev.Player);
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Player.Hand.Value);
 
