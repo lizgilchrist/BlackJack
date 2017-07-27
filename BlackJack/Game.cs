@@ -8,9 +8,7 @@ namespace BlackJack
 {
     public class Game
     {
-        //Start game: Sets up each player
-        //Sets up each player with a bank account.
-        //Starts round: 
+        //Set up each player with a bank account.
         //Round Payouts: BlackJack on first two cards = 3:2 win unless the Dealer also has a BlackJack then it's a tie, Win/Lose 1:1, Push/Tie - no money exchanged
         //Split becomes two separate bets half of the original bet. Each hand can win/lose or tie. Combination of the results will factor into player's total bank account.
         //NOTE:If the player's SplitHand has 21 but the dealer has a blackjack the player will still lose to the dealer in this case. 

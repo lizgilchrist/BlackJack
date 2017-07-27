@@ -30,30 +30,7 @@ namespace BlackJack
                 Console.WriteLine("The total for the " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
             };
 
-            game.Start();
-
-            return;
-
-
-
-            // Old code:
-
-
-            Round round = new Round(
-                new HumanPlayer(Console.ReadLine()),
-                new Deck());
-
-            round.OnRoundStart += (ev) =>
-            {
-                Console.WriteLine("The round has started!");
-                PrintHand(ev.Player);
-                Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Player.Hand.Value);
-
-                PrintHand(ev.Dealer);
-                Console.WriteLine("The total for the " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
-            };
-
-            round.OnRoundSplit += (ev) =>
+            game.OnRoundSplit += (ev) =>
             {
                 Console.WriteLine("Would you like to split?");
                 string userInput = Console.ReadLine();
@@ -70,7 +47,7 @@ namespace BlackJack
                 throw new Exception("TODO: Need to handle bad input from user");
             };
 
-            round.OnRoundTurn += (ev) =>
+            game.OnRoundTurn += (ev) =>
             {
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
                 string userInput = Console.ReadLine();
@@ -87,18 +64,18 @@ namespace BlackJack
                 throw new Exception("TODO: Need to handle bad input from user");
             };
 
-            round.OnRoundHit += (ev) =>
+            game.OnRoundHit += (ev) =>
             {
                 PrintHand(ev.Player);
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand now is " + ev.Player.Hand.Value);
             };
 
-            round.OnRoundStay += (ev) =>
+            game.OnRoundStay += (ev) =>
             {
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand stays as " + ev.Player.Hand.Value);
             };
 
-            round.OnRoundBust += (ev) =>
+            game.OnRoundBust += (ev) =>
             {
                 if (ev.Player == null)
                 {
@@ -125,13 +102,13 @@ namespace BlackJack
                 
             };
 
-            round.OnRoundHoleCardReveal += (ev) =>
+            game.OnRoundHoleCardReveal += (ev) =>
             {
                 PrintHand(ev.Dealer);
                 Console.WriteLine("The total for " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
             };
 
-            round.OnRoundHandResult += (ev) =>
+            game.OnRoundHandResult += (ev) =>
             {
                 if(ev.Result == HandResult.Tie)
                 {
@@ -150,12 +127,12 @@ namespace BlackJack
 
             };
 
-            round.OnRoundEnd += (ev) =>
+            game.OnRoundEnd += (ev) =>
             {
                 Console.WriteLine("Round is over");
             };
 
-            round.Start();
+            game.Start();
            
         }
 
