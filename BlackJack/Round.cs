@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlackJack.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -200,62 +201,5 @@ namespace BlackJack
                 }
             }
         }
-    }
-
-    public class OnRoundStartArgs
-    {
-        public Player Dealer { get; set; }
-
-        public Player Player { get; set; }
-    }
-
-    public class OnRoundSplitArgs
-    {
-        public HumanPlayer Player { get; set; }
-    }
-
-    public class OnRoundTurnArgs
-    {
-        public HumanPlayer Player { get; set; }
-    }
-
-    public class OnRoundHitArgs
-    {
-        public Player Player { get; set; } 
-    }
-
-    public class OnRoundStayArgs
-    {
-        public Player Player { get; set; }
-    }
-
-    public class OnRoundBustArgs
-    {
-        public DealerPlayer Dealer { get; set; }
-
-        public HumanPlayer Player { get; set; }
-
-        public Hand BustHand { get; set; }
-    }
-
-    public class OnRoundHoleCardRevealArgs
-    {
-        public Player Dealer { get; set; }
-
-        public Card HoleCard { get; set; }
-    }
-
-    public class OnRoundHandResultArgs
-    {
-        public Hand Hand { get; set; }
-
-        public HandResult Result { get; set; }
-
-        public Player Player { get; set; }
-    }
-
-    public class OnRoundEndArgs
-    {
-        
     }
 }
