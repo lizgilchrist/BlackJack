@@ -9,10 +9,11 @@ namespace BlackJack
     public class Game
     {
         //Set up each player with a bank account.
+        //Multiple rounds
         //Round Payouts: BlackJack on first two cards = 3:2 win unless the Dealer also has a BlackJack then it's a tie, Win/Lose 1:1, Push/Tie - no money exchanged
         //Split becomes two separate bets half of the original bet. Each hand can win/lose or tie. Combination of the results will factor into player's total bank account.
         //NOTE:If the player's SplitHand has 21 but the dealer has a blackjack the player will still lose to the dealer in this case. 
-        //End round:
+        //End round: if yes - end game, if no repeat round.
         //End game: Total left in bank after all round/s completed - Player will be offered after each round whether to quit or continue
         
         private HumanPlayer _player;
@@ -26,7 +27,7 @@ namespace BlackJack
         public event Action<OnRoundBustArgs> OnRoundBust;
         public event Action<OnRoundHoleCardRevealArgs> OnRoundHoleCardReveal;
         public event Action<OnRoundHandResultArgs> OnRoundHandResult;
-        public event Action<OnRoundEndArgs> OnRoundEnd;
+        public event Func<OnRoundEndArgs, RoundEndAction> OnRoundEnd;
 
         public Game(HumanPlayer player, IDeck deck)
         {
@@ -36,54 +37,62 @@ namespace BlackJack
 
         public void Start()
         {
-            Round round = new Round(_player, _deck);
 
-            round.OnRoundStart += (ev) =>
+            while(true)
             {
-                OnRoundStart(ev);
-            };
-            
-            round.OnRoundSplit += (ev) => 
-            {
-                return OnRoundSplit(ev);
-            };
+                Round round = new Round(_player, _deck);
 
-            round.OnRoundTurn += (ev) =>
-            {
-                return OnRoundTurn(ev);
-            };
+                round.OnRoundStart += (ev) =>
+                {
+                    OnRoundStart(ev);
+                };
 
-            round.OnRoundHit += (ev) =>
-            {
-                OnRoundHit(ev);
-            };
+                round.OnRoundSplit += (ev) =>
+                {
+                    return OnRoundSplit(ev);
+                };
 
-            round.OnRoundStay += (ev) =>
-            {
-                OnRoundStay(ev);
-            };
+                round.OnRoundTurn += (ev) =>
+                {
+                    return OnRoundTurn(ev);
+                };
 
-            round.OnRoundBust += (ev) =>
-            {
-                OnRoundBust(ev);
-            };
+                round.OnRoundHit += (ev) =>
+                {
+                    OnRoundHit(ev);
+                };
 
-            round.OnRoundHoleCardReveal += (ev) =>
-            {
-                OnRoundHoleCardReveal(ev);
-            };
+                round.OnRoundStay += (ev) =>
+                {
+                    OnRoundStay(ev);
+                };
 
-            round.OnRoundHandResult += (ev) =>
-            {
-                OnRoundHandResult(ev);
-            };
+                round.OnRoundBust += (ev) =>
+                {
+                    OnRoundBust(ev);
+                };
 
-            round.OnRoundEnd += (ev) =>
-            {
-                OnRoundEnd(ev);
-            };
+                round.OnRoundHoleCardReveal += (ev) =>
+                {
+                    OnRoundHoleCardReveal(ev);
+                };
 
-            round.Start();
+                round.OnRoundHandResult += (ev) =>
+                {
+                    OnRoundHandResult(ev);
+                };
+
+                round.Start();
+
+                //Game.Payouts
+
+                RoundEndAction roundEndAction = OnRoundEnd(new OnRoundEndArgs());
+
+                if(roundEndAction == RoundEndAction.Quit)
+                {
+                    break;
+                }
+            }
         }
     }
 }

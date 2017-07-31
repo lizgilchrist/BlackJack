@@ -137,7 +137,6 @@ namespace BlackJack.Tests
             round.OnRoundBust += (ev) => { };
             round.OnRoundHoleCardReveal += (ev) => { };
             round.OnRoundHandResult += (ev) => { };
-            round.OnRoundEnd += (ev) => { };
             return round;
         }
 

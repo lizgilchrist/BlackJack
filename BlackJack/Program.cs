@@ -120,16 +120,26 @@ namespace BlackJack
                 }
                 else if(ev.Result == HandResult.Lose)
                 {
-                    Console.WriteLine(ev.Player.Name + "Lost");
+                    Console.WriteLine(ev.Player.Name + " Lost");
                 }
-
-                throw new Exception("TODO: Need to handle bad input from user");
 
             };
 
             game.OnRoundEnd += (ev) =>
             {
-                Console.WriteLine("Round is over");
+                Console.WriteLine("Do you wish to start a new round?");
+                string userInput = Console.ReadLine();
+
+                if(userInput == "Yes")
+                {
+                   return RoundEndAction.Continue;
+                }
+                else if(userInput == "No")
+                {
+                    return RoundEndAction.Quit;
+                }
+
+                throw new Exception("TODO: Need to handle bad input from user");
             };
 
             game.Start();

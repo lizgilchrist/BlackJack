@@ -27,7 +27,6 @@ namespace BlackJack
         public event Action<OnRoundBustArgs> OnRoundBust;
         public event Action<OnRoundHoleCardRevealArgs> OnRoundHoleCardReveal;
         public event Action<OnRoundHandResultArgs> OnRoundHandResult;
-        public event Action<OnRoundEndArgs> OnRoundEnd;
 
         public void Start()
         {
@@ -140,8 +139,6 @@ namespace BlackJack
             {
                 ResolveRoundResult(_player.SplitHand);
             }
-
-            OnRoundEnd(new OnRoundEndArgs());
 
         }
 

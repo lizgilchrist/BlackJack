@@ -35,7 +35,6 @@ namespace BlackJack.Runner
             round.OnRoundTurn += (ev) => { return TurnAction.Stay;};
             round.OnRoundHoleCardReveal += (ev) => { };
             round.OnRoundHandResult += (ev) => { };
-            round.OnRoundEnd += (ev) => { };
             return round;
         }
     }
