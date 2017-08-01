@@ -12,14 +12,52 @@ namespace BlackJack
     
     class Program
     {
+        public class MockDeck : IDeck
+        {
+            private List<Card> _cards;
+
+            public MockDeck(params Card[] cards)
+            {
+                _cards = cards.ToList();
+            }
+
+            public Card GetNextCard()
+            {
+                var card = _cards[0];
+                _cards.RemoveAt(0);
+                return card;
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            
 
             Game game = new Game(
-                new HumanPlayer(Console.ReadLine()),
-                new Deck());
+                new HumanPlayer(Console.ReadLine(), 500),
+                new MockDeck(
+                    new Card(Suit.Diamonds, Face.Eight),
+                    new Card(Suit.Clubs, Face.Eight),
+                    new Card(Suit.Clubs, Face.Eight),
+                    new Card(Suit.Clubs, Face.Ten),
+                    new Card(Suit.Hearts, Face.Eight),
+                    new Card(Suit.Hearts, Face.Ten)));
 
+            game.OnRoundBet += (ev) =>
+            {
+                Console.WriteLine("How much would you like to bet? (1 - " + ev.Player.Account + ")");
+                int playerBet = Convert.ToInt32(Console.ReadLine());
+
+                if (playerBet < ev.Player.Account)
+                {
+                    return playerBet;
+                }
+
+                throw new Exception("TODO: Need to handle bad input from user");
+
+            };
+            
             game.OnRoundStart += (ev) =>
             {
                 Console.WriteLine("The round has started!");
@@ -67,12 +105,12 @@ namespace BlackJack
             game.OnRoundHit += (ev) =>
             {
                 PrintHand(ev.Player);
-                Console.WriteLine("The total for " + ev.Player.Name + "'s hand now is " + ev.Player.Hand.Value);
+                Console.WriteLine("The total for " + ev.Player.Name + "'s hand now is " + ev.Hand.Value);
             };
 
             game.OnRoundStay += (ev) =>
             {
-                Console.WriteLine("The total for " + ev.Player.Name + "'s hand stays as " + ev.Player.Hand.Value);
+                Console.WriteLine("The total for " + ev.Player.Name + "'s hand stays as " + ev.Hand.Value);
             };
 
             game.OnRoundBust += (ev) =>
@@ -112,15 +150,19 @@ namespace BlackJack
             {
                 if(ev.Result == HandResult.Tie)
                 {
-                    Console.WriteLine("It's a tie!");
+                    Console.WriteLine("It's a tie! Your account balance is now " + ev.Player.Account);
                 }
                 else if(ev.Result == HandResult.Win)
                 {
-                    Console.WriteLine(ev.Player.Name + "Win's");
+                    Console.WriteLine(ev.Player.Name + " Win's! Your account balance is now " + ev.Player.Account);
                 }
                 else if(ev.Result == HandResult.Lose)
                 {
-                    Console.WriteLine(ev.Player.Name + " Lost");
+                    Console.WriteLine(ev.Player.Name + " Lost. Your account balance is now " + ev.Player.Account);
+                }
+                else if(ev.Result == HandResult.BlackJack)
+                {
+                    Console.WriteLine(ev.Player.Name + " Win's BLACKJACK!! Your account balance is now " + ev.Player.Account);
                 }
 
             };

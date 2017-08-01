@@ -129,7 +129,7 @@ namespace BlackJack.Tests
 
         public Round CreateRound(IDeck deck)
         {
-            Round round = new Round(new HumanPlayer("Player"), deck);
+            Round round = new Round(new HumanPlayer("Player", 500), deck);
             round.OnRoundStart += (ev) => { };
             round.OnRoundSplit += (ev) => { return SplitAction.No; };
             round.OnRoundHit += (ev) => { };

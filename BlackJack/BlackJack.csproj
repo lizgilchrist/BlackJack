@@ -45,6 +45,16 @@
     <Compile Include="Card.cs" />
     <Compile Include="DealerPlayer.cs" />
     <Compile Include="Deck.cs" />
+    <Compile Include="Events\OnRoundBetArgs.cs" />
+    <Compile Include="Events\OnRoundBustArgs.cs" />
+    <Compile Include="Events\OnRoundEndArgs.cs" />
+    <Compile Include="Events\OnRoundHandResultArgs.cs" />
+    <Compile Include="Events\OnRoundHitArgs.cs" />
+    <Compile Include="Events\OnRoundHoleCardRevealArgs.cs" />
+    <Compile Include="Events\OnRoundSplitArgs.cs" />
+    <Compile Include="Events\OnRoundStartArgs.cs" />
+    <Compile Include="Events\OnRoundStayArgs.cs" />
+    <Compile Include="Events\OnRoundTurnArgs.cs" />
     <Compile Include="Face.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Round.cs" />
@@ -63,8 +73,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

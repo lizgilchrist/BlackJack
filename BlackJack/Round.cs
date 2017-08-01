@@ -44,6 +44,19 @@ namespace BlackJack
                 Dealer = _dealer
             });
 
+            if (_player.Hand.Value == 21)
+            {
+                if(_dealer.Hand.Value < 10)
+                {
+                    OnRoundHandResult(new OnRoundHandResultArgs()
+                    {
+                        Hand = _player.Hand,
+                        Player = _player,
+                        Result = HandResult.BlackJack
+                    });    
+                }
+            }
+
             List<Card> cards = _player.Hand.GetCards();
             if (cards[0].Face == cards[1].Face)
             {
@@ -71,7 +84,6 @@ namespace BlackJack
                 {
                     ResolvePlayerHand(_player.Hand);
                     ResolvePlayerHand(_player.SplitHand);
-     
                 }
             }
             else
@@ -107,6 +119,25 @@ namespace BlackJack
                 HoleCard = holeCard
             });
 
+            if(_dealer.Hand.Value == 21 && _player.Hand.Value == 21)
+            {
+                OnRoundHandResult(new OnRoundHandResultArgs()
+                {
+                    Hand = _player.Hand,
+                    Player = _player,
+                    Result = HandResult.Tie
+                });
+            }
+            else if(_dealer.Hand.Value == 21)
+            {
+                OnRoundHandResult(new OnRoundHandResultArgs()
+                {
+                    Hand = _player.Hand,
+                    Player = _player,
+                    Result = HandResult.Lose
+                });
+            }
+            
             while (_dealer.Hand.Value < 17 && _dealer.Hand.Value < _player.Hand.Value)
             {
                 _dealer.Hand.AddCard(_deck.GetNextCard());
@@ -121,7 +152,8 @@ namespace BlackJack
             {
                 OnRoundStay(new OnRoundStayArgs()
                 {
-                    Player = _dealer
+                    Player = _dealer,
+                    Hand = _dealer.Hand
                 });
             }
 
@@ -184,14 +216,17 @@ namespace BlackJack
                     hand.AddCard(_deck.GetNextCard());
                     OnRoundHit(new OnRoundHitArgs()
                     {
-                        Player = _player
+                        Player = _player,
+                        Hand = hand
                     });
                 }
                 else if (turnAction == TurnAction.Stay)
+
                 {
                     OnRoundStay(new OnRoundStayArgs()
                     {
-                        Player = _player
+                        Player = _player,
+                        Hand = hand
                     });
                     break;
                 }

@@ -9,5 +9,7 @@ namespace BlackJack.Events
     public class OnRoundHitArgs
     {
         public Player Player { get; set; }
+
+        public Hand Hand { get; set; }
     }
 }

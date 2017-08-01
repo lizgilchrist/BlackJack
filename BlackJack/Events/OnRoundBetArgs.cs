@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace BlackJack.Events
 {
-    public class OnRoundStayArgs
+    public class OnRoundBetArgs
     {
-        public Player Player { get; set; }
-
-        public Hand Hand { get; set; }
+        public HumanPlayer Player { get; set; }
     }
 }

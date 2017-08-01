@@ -12,6 +12,6 @@ namespace BlackJack.Events
 
         public HandResult Result { get; set; }
 
-        public Player Player { get; set; }
+        public HumanPlayer Player { get; set; }
     }
 }

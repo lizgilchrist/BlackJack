@@ -9,17 +9,22 @@ namespace BlackJack
 {
     public class Game
     {
-        //Set up each player with a bank account.
-        //Multiple rounds
+        //PlayerAccount: Amount for the game = 500
+        //PlayerBet: Amount for the round, comes out of PlayerAccount (must be equal to or less), at the end of the round the players bet will either be lost, unchanged, or more. 
+        //The playerBet amount after the round will be added to PlayerAccount if they win or draw. Otherwise, PlayerAccount remains the same.
+        //PlayerBet amount will change or not based on the player roundPayout result
         //Round Payouts: BlackJack on first two cards = 3:2 win unless the Dealer also has a BlackJack then it's a tie, Win/Lose 1:1, Push/Tie - no money exchanged
         //Split becomes two separate bets half of the original bet. Each hand can win/lose or tie. Combination of the results will factor into player's total bank account.
         //NOTE:If the player's SplitHand has 21 but the dealer has a blackjack the player will still lose to the dealer in this case. 
         //End round: if yes - end game, if no repeat round.
+
         //End game: Total left in bank after all round/s completed - Player will be offered after each round whether to quit or continue
         
         private HumanPlayer _player;
         private IDeck _deck;
-
+        
+       
+        public event Func<OnRoundBetArgs, Int32> OnRoundBet;
         public event Action<OnRoundStartArgs> OnRoundStart;
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
         public event Func<OnRoundTurnArgs, TurnAction> OnRoundTurn;
@@ -38,8 +43,13 @@ namespace BlackJack
 
         public void Start()
         {
+            int playerBet = OnRoundBet(new OnRoundBetArgs()
+            {
+                Player = _player
+            });
+            _player.Account =_player.Account - playerBet;
 
-            while(true)
+            while (true)
             {
                 Round round = new Round(_player, _deck);
 
@@ -50,6 +60,7 @@ namespace BlackJack
 
                 round.OnRoundSplit += (ev) =>
                 {
+                    playerBet = playerBet / 2;
                     return OnRoundSplit(ev);
                 };
 
@@ -80,12 +91,24 @@ namespace BlackJack
 
                 round.OnRoundHandResult += (ev) =>
                 {
+                    if(ev.Result == HandResult.BlackJack)
+                    {
+                        _player.Account = _player.Account + (int)(playerBet * 2.5); 
+                    }
+                    else if (ev.Result == HandResult.Tie)
+                    {
+                        _player.Account = _player.Account + playerBet;
+                    }
+                    else if (ev.Result == HandResult.Win)
+                    {
+                         _player.Account = _player.Account + playerBet * 2;
+                    }
+
                     OnRoundHandResult(ev);
+
                 };
 
                 round.Start();
-
-                //Game.Payouts
 
                 RoundEndAction roundEndAction = OnRoundEnd(new OnRoundEndArgs());
 

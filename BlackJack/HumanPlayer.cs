@@ -9,12 +9,25 @@ namespace BlackJack
     public class HumanPlayer : Player
     {
         private string _name;
+        private int _account;
 
         public override string Name
         {
             get
             {
                 return _name;
+            }
+        }
+
+        public int Account
+        {
+            get
+            {
+                return _account;
+            }
+            set
+            {
+                _account = value;
             }
         }
 
@@ -28,9 +41,10 @@ namespace BlackJack
             }
         }
 
-        public HumanPlayer(string name)
+        public HumanPlayer(string name, int account)
         {
             _name = name;
+            _account = account;
         }
     }
 }

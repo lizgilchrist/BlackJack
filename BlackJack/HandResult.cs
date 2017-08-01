@@ -14,6 +14,8 @@ namespace BlackJack
 
         Lose,
 
-        Tie
+        Tie, 
+
+        BlackJack
     }
 }
