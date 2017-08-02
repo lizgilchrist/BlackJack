@@ -61,10 +61,10 @@ namespace BlackJack
             game.OnRoundStart += (ev) =>
             {
                 Console.WriteLine("The round has started!");
-                PrintHand(ev.Player);
+                PrintHand(ev.Player, ev.Player.Hand);
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Player.Hand.Value);
 
-                PrintHand(ev.Dealer);
+                PrintHand(ev.Dealer, ev.Dealer.Hand);
                 Console.WriteLine("The total for the " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
             };
 
@@ -102,9 +102,9 @@ namespace BlackJack
                 throw new Exception("TODO: Need to handle bad input from user");
             };
 
-            game.OnRoundHit += (ev) =>
+            game.OnRoundDeal += (ev) =>
             {
-                PrintHand(ev.Player);
+                PrintHand(ev.Player, ev.Hand);
                 Console.WriteLine("The total for " + ev.Player.Name + "'s hand now is " + ev.Hand.Value);
             };
 
@@ -142,7 +142,7 @@ namespace BlackJack
 
             game.OnRoundHoleCardReveal += (ev) =>
             {
-                PrintHand(ev.Dealer);
+                PrintHand(ev.Dealer, ev.Dealer.Hand);
                 Console.WriteLine("The total for " + ev.Dealer.Name + "'s hand is " + ev.Dealer.Hand.Value);
             };
 
@@ -188,10 +188,10 @@ namespace BlackJack
            
         }
 
-        private static void PrintHand(Player player)
+        private static void PrintHand(Player player, Hand hand)
         {
             string result = $"{player.Name}'s hand is: ";
-            IEnumerable<Card> cards = player.Hand.GetCards();
+            IEnumerable<Card> cards = hand.GetCards();
             if (cards.Count() == 0)
             {
                 result += "empty";

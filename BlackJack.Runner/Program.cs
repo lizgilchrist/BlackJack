@@ -30,7 +30,7 @@ namespace BlackJack.Runner
             game.OnRoundBet += (ev) => { return 500; };
             game.OnRoundStart += (ev) => { };
             game.OnRoundSplit += (ev) => { return SplitAction.Yes; };
-            game.OnRoundHit += (ev) => { };
+            game.OnRoundDeal += (ev) => { };
             game.OnRoundStay += (ev) => { };
             game.OnRoundBust += (ev) => { };
             game.OnRoundTurn += (ev) => { return TurnAction.Stay;};

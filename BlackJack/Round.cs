@@ -23,7 +23,7 @@ namespace BlackJack
         public event Action<OnRoundStartArgs> OnRoundStart;
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
         public event Func<OnRoundTurnArgs, TurnAction> OnRoundTurn;
-        public event Action<OnRoundHitArgs> OnRoundHit;
+        public event Action<OnRoundDealArgs> OnRoundDeal;
         public event Action<OnRoundStayArgs> OnRoundStay;
         public event Action<OnRoundBustArgs> OnRoundBust;
         public event Action<OnRoundHoleCardRevealArgs> OnRoundHoleCardReveal;
@@ -67,10 +67,21 @@ namespace BlackJack
 
                 if (splitAction == SplitAction.Yes)
                 {
-                    Hand splitHand = _player.Hand.Split();
+                    _player.SplitHand = _player.Hand.Split();
+
                     _player.Hand.AddCard(_deck.GetNextCard());
-                    splitHand.AddCard(_deck.GetNextCard());
-                    _player.SplitHand = splitHand;
+                    OnRoundDeal(new OnRoundDealArgs()
+                    {
+                        Player = _player,
+                        Hand = _player.Hand
+                    });
+
+                    _player.SplitHand.AddCard(_deck.GetNextCard());
+                    OnRoundDeal(new OnRoundDealArgs()
+                    {
+                        Player = _player,
+                        Hand = _player.SplitHand
+                    });
                 }
             }
 
@@ -141,7 +152,7 @@ namespace BlackJack
             while (_dealer.Hand.Value < 17 && _dealer.Hand.Value < _player.Hand.Value)
             {
                 _dealer.Hand.AddCard(_deck.GetNextCard());
-                OnRoundHit(new OnRoundHitArgs()
+                OnRoundDeal(new OnRoundDealArgs()
                 {
                     Player = _dealer
                 });
@@ -214,7 +225,7 @@ namespace BlackJack
                 if (turnAction == TurnAction.Hit)
                 {
                     hand.AddCard(_deck.GetNextCard());
-                    OnRoundHit(new OnRoundHitArgs()
+                    OnRoundDeal(new OnRoundDealArgs()
                     {
                         Player = _player,
                         Hand = hand
