@@ -130,30 +130,56 @@ namespace BlackJack
             {
                 Console.WriteLine();
                 PrintHand(ev.Player, ev.Hand);
-                string handName = null;
-                if (ev.Hand.IsSplit)
+                if (ev.Player != null)
                 {
-                    handName = "other hand";
+                    if (!ev.Player.IsSplit)
+                    {
+                        Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Hand.Value);
+                    }
+
+                    string handName = null;
+                    if (ev.Hand.IsSplit)
+                    {
+                        handName = "second hand";
+                    }
+                    else
+                    {
+                        handName = "first hand";
+                    }
+                    Console.WriteLine("The total for " + ev.Player.Name + "'s " + handName + " is now " + ev.Hand.Value);
                 }
                 else
                 {
-                    handName = "hand";
+                    Console.WriteLine("The total for " + ev.Dealer.Name + "'s hand stays as " + ev.Hand.Value);
                 }
-                Console.WriteLine("The total for " + ev.Player.Name + "'s " + handName + " is now " + ev.Hand.Value);
             };
 
             game.OnRoundStay += (ev) =>
             {
-                string handName = null;
-                if (ev.Hand.IsSplit)
+                if(ev.Player != null)
                 {
-                    handName = "other hand";
+                    if(!ev.Player.IsSplit)
+                    {
+                        Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Hand.Value);
+                    }
+
+                    string handName = null;
+                    if (ev.Hand.IsSplit)
+                    {
+                        handName = "second hand";
+                    }
+                    else
+                    {
+                        handName = "first hand";
+                    }
+
+                    Console.WriteLine("The total for " + ev.Player.Name + "'s " + handName + " stays as " + ev.Hand.Value);
                 }
                 else
                 {
-                    handName = "hand";
+                    Console.WriteLine("The total for " + ev.Dealer.Name + "'s hand stays as " + ev.Hand.Value);
                 }
-                Console.WriteLine("The total for " + ev.Player.Name + "'s " + handName + " stays as " + ev.Hand.Value);
+                    
             };
 
             game.OnRoundBust += (ev) =>
@@ -187,29 +213,44 @@ namespace BlackJack
             {
                 Console.WriteLine();
                 PrintHand(ev.Dealer, ev.Dealer.Hand);
-                Console.WriteLine("The total is now " + ev.Dealer.Hand.Value);
+                
             };
 
             game.OnRoundHandResult += (ev) =>
             {
-                if(ev.Result == HandResult.Tie)
+                if(!ev.Player.IsSplit)
                 {
+                    Console.WriteLine("The result for your hand is...");
+                }
+                else
+                {
+                    string handName = null;
+                    if (ev.Hand.IsSplit)
+                    {
+                        handName = "second hand";
+                    }
+                    else
+                    {
+                        handName = "first hand";
+                    }
                     Console.WriteLine();
+                    Console.WriteLine("The result for your " + handName + " is...");
+                }
+
+                if (ev.Result == HandResult.Tie)
+                {
                     Console.WriteLine("It's a tie! Your account balance is now " + ev.Player.Account);
                 }
                 else if(ev.Result == HandResult.Win)
                 {
-                    Console.WriteLine();
                     Console.WriteLine(ev.Player.Name + " Win's! Your account balance is now " + ev.Player.Account);
                 }
                 else if(ev.Result == HandResult.Lose)
                 {
-                    Console.WriteLine();
                     Console.WriteLine(ev.Player.Name + " Lost. Your account balance is now " + ev.Player.Account);
                 }
                 else if(ev.Result == HandResult.BlackJack)
                 {
-                    Console.WriteLine();
                     Console.WriteLine(ev.Player.Name + " WIN'S BLACKJACK!! Your account balance is now " + ev.Player.Account);
                 }
 

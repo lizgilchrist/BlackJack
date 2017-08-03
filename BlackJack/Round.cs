@@ -164,7 +164,7 @@ namespace BlackJack
             {
                 OnRoundStay(new OnRoundStayArgs()
                 {
-                    Player = _dealer,
+                    Dealer = _dealer,
                     Hand = _dealer.Hand
                 });
             }

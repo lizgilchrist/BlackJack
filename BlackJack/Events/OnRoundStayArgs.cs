@@ -8,8 +8,10 @@ namespace BlackJack.Events
 {
     public class OnRoundStayArgs
     {
-        public Player Player { get; set; }
+        public HumanPlayer Player { get; set; }
 
         public Hand Hand { get; set; }
+
+        public DealerPlayer Dealer { get; set; }
     }
 }
