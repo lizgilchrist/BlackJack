@@ -8,7 +8,9 @@ namespace BlackJack.Events
 {
     public class OnRoundDealArgs
     {
-        public Player Player { get; set; }
+        public HumanPlayer Player { get; set; }
+
+        public DealerPlayer Dealer { get; set; }
 
         public Hand Hand { get; set; }
     }

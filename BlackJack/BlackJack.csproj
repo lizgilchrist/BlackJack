@@ -49,12 +49,13 @@
     <Compile Include="Events\OnRoundBustArgs.cs" />
     <Compile Include="Events\OnRoundEndArgs.cs" />
     <Compile Include="Events\OnRoundHandResultArgs.cs" />
-    <Compile Include="Events\OnRoundHitArgs.cs" />
+    <Compile Include="Events\OnRoundDealArgs.cs" />
     <Compile Include="Events\OnRoundHoleCardRevealArgs.cs" />
     <Compile Include="Events\OnRoundSplitArgs.cs" />
     <Compile Include="Events\OnRoundStartArgs.cs" />
     <Compile Include="Events\OnRoundStayArgs.cs" />
-    <Compile Include="Events\OnRoundTurnArgs.cs" />
+    <Compile Include="Events\OnRoundTurnDecisionArgs.cs" />
+    <Compile Include="Events\OnRoundTurnStartArgs.cs" />
     <Compile Include="Face.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Round.cs" />

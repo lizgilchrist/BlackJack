@@ -14,7 +14,7 @@ namespace BlackJack.Tests
         {
             Round round = CreateRound(new Deck());
 
-            round.OnRoundTurn += (ev) =>
+            round.OnRoundTurnDecision += (ev) =>
             {
                 return TurnAction.Hit;
             };
@@ -41,7 +41,7 @@ namespace BlackJack.Tests
         {
             Round round = CreateRound(new Deck());
 
-            round.OnRoundTurn += (ev) =>
+            round.OnRoundTurnDecision += (ev) =>
             {
                 return TurnAction.Stay;
             };
@@ -78,7 +78,7 @@ namespace BlackJack.Tests
                 new Card(Suit.Clubs, Face.King),
                 new Card(Suit.Clubs, Face.King)));
 
-            round.OnRoundTurn += ev =>
+            round.OnRoundTurnDecision += ev =>
             {
                 return TurnAction.Hit;
             };
@@ -108,7 +108,7 @@ namespace BlackJack.Tests
                 new Card(Suit.Clubs, Face.King)
                 ));
 
-            round.OnRoundTurn += ev =>
+            round.OnRoundTurnDecision += ev =>
             {
                 return TurnAction.Stay;
             };
@@ -150,7 +150,7 @@ namespace BlackJack.Tests
                 new Card(Suit.Clubs, Face.Eight)
                 ));
 
-            round.OnRoundTurn += ev =>
+            round.OnRoundTurnDecision += ev =>
             {
                 return TurnAction.Stay;
             };
@@ -181,7 +181,7 @@ namespace BlackJack.Tests
                 new Card(Suit.Clubs, Face.Ten)
                 ));
 
-            round.OnRoundTurn += ev =>
+            round.OnRoundTurnDecision += ev =>
             {
                 return TurnAction.Stay;
             };
@@ -211,7 +211,7 @@ namespace BlackJack.Tests
                 new Card(Suit.Clubs, Face.Eight)
                 ));
 
-            round.OnRoundTurn += ev =>
+            round.OnRoundTurnDecision += ev =>
             {
                 return TurnAction.Stay;
             };
@@ -253,7 +253,7 @@ namespace BlackJack.Tests
                 return SplitAction.No;
             };
 
-            round.OnRoundTurn += (ev) => { return TurnAction.Stay;};
+            round.OnRoundTurnDecision += (ev) => { return TurnAction.Stay;};
 
             round.Start();
 

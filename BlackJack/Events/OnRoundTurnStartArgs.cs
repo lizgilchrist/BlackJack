@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace BlackJack.Events
 {
-    public class OnRoundTurnArgs
+    public class OnRoundTurnStartArgs
     {
         public HumanPlayer Player { get; set; }
+
+        public DealerPlayer Dealer { get; set; }
+
+        public Hand Hand { get; set; }
     }
 }

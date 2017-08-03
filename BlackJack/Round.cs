@@ -22,7 +22,8 @@ namespace BlackJack
 
         public event Action<OnRoundStartArgs> OnRoundStart;
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
-        public event Func<OnRoundTurnArgs, TurnAction> OnRoundTurn;
+        public event Action<OnRoundTurnStartArgs> OnRoundTurnStart;
+        public event Func<OnRoundTurnDecisionArgs, TurnAction> OnRoundTurnDecision;
         public event Action<OnRoundDealArgs> OnRoundDeal;
         public event Action<OnRoundStayArgs> OnRoundStay;
         public event Action<OnRoundBustArgs> OnRoundBust;
@@ -154,7 +155,7 @@ namespace BlackJack
                 _dealer.Hand.AddCard(_deck.GetNextCard());
                 OnRoundDeal(new OnRoundDealArgs()
                 {
-                    Player = _dealer
+                    Dealer = _dealer
                 });
 
             }
@@ -215,9 +216,15 @@ namespace BlackJack
 
         private void ResolvePlayerHand(Hand hand)
         {
+            OnRoundTurnStart(new OnRoundTurnStartArgs()
+            {
+                Player = _player,
+                Hand = hand 
+            });
+
             while (!hand.IsBust)
             {
-                TurnAction turnAction = OnRoundTurn(new OnRoundTurnArgs()
+                TurnAction turnAction = OnRoundTurnDecision(new OnRoundTurnDecisionArgs()
                 {
                     Player = _player
                 });

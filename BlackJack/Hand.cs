@@ -10,6 +10,7 @@ namespace BlackJack
     {
 
         private List<Card> _cards;
+        private bool _isSplit = false;
 
         public Hand()
         {
@@ -21,6 +22,14 @@ namespace BlackJack
             return _cards; 
         }
         
+        public bool IsSplit
+        {
+            get
+            {
+                return _isSplit;
+            }
+        }
+
         public int Value
         {
             get
@@ -71,6 +80,7 @@ namespace BlackJack
              _cards.RemoveAt(1);
             Hand splitHand = new Hand();
             splitHand.AddCard(removedCard);
+            splitHand._isSplit = true;
 
             return splitHand;
         }
