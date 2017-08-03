@@ -110,7 +110,7 @@ namespace BlackJack
 
             game.OnRoundTurnDecision += (ev) =>
             {
-
+                Console.WriteLine();
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
                 string userInput = Console.ReadLine();
 
@@ -156,6 +156,7 @@ namespace BlackJack
 
             game.OnRoundStay += (ev) =>
             {
+                Console.WriteLine();
                 if(ev.Player != null)
                 {
                     if(!ev.Player.IsSplit)
@@ -220,6 +221,7 @@ namespace BlackJack
             {
                 if(!ev.Player.IsSplit)
                 {
+                    Console.WriteLine();
                     Console.WriteLine("The result for your hand is...");
                 }
                 else
