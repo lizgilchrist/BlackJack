@@ -22,6 +22,7 @@ namespace BlackJack
 
         public event Action<OnRoundStartArgs> OnRoundStart;
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
+        public event Func<OnRoundDoubleArgs, DoubleAction> OnRoundDouble;
         public event Action<OnRoundTurnStartArgs> OnRoundTurnStart;
         public event Func<OnRoundTurnDecisionArgs, TurnAction> OnRoundTurnDecision;
         public event Action<OnRoundDealArgs> OnRoundDeal;
@@ -55,6 +56,24 @@ namespace BlackJack
                         Player = _player,
                         Result = HandResult.BlackJack
                     });    
+                }
+            }
+
+            if(_player.Hand.Value <= 11)
+            {
+                DoubleAction doubleAction = OnRoundDouble(new OnRoundDoubleArgs()
+                {
+                    Player = _player
+                });
+
+                if(doubleAction == DoubleAction.Yes)
+                {
+                    _player.Hand.AddCard(_deck.GetNextCard());
+                    OnRoundDeal(new OnRoundDealArgs()
+                    {
+                        Player = _player,
+                        Hand = _player.Hand
+                    });
                 }
             }
 
@@ -92,12 +111,44 @@ namespace BlackJack
                 List<Card> splitHandCards = _player.SplitHand.GetCards();
                 bool isSplitHandAce = splitHandCards[0].Face == Face.Ace;
 
-                if (!isFirstHandAce || !isSplitHandAce)
+                if (_player.Hand.Value <= 11)
+                {
+                    DoubleAction doubleAction = OnRoundDouble(new OnRoundDoubleArgs()
+                    {
+                        Player = _player
+                    });
+
+                    if (doubleAction == DoubleAction.Yes)
+                    {
+                        _player.Hand.AddCard(_deck.GetNextCard());
+                        OnRoundDeal(new OnRoundDealArgs()
+                        {
+                            Player = _player,
+                            Hand = _player.Hand
+                        });
+
+                        _player.SplitHand.AddCard(_deck.GetNextCard());
+                        OnRoundDeal(new OnRoundDealArgs()
+                        {
+                            Player = _player,
+                            Hand = _player.SplitHand
+                        });
+                    }
+                    else
+                    {
+                        ResolvePlayerHand(_player.Hand);
+                        ResolvePlayerHand(_player.SplitHand);
+                    }
+                }
+
+                else if (!isFirstHandAce || !isSplitHandAce)
                 {
                     ResolvePlayerHand(_player.Hand);
                     ResolvePlayerHand(_player.SplitHand);
                 }
+                
             }
+
             else
             {
                 ResolvePlayerHand(_player.Hand);
@@ -155,7 +206,8 @@ namespace BlackJack
                 _dealer.Hand.AddCard(_deck.GetNextCard());
                 OnRoundDeal(new OnRoundDealArgs()
                 {
-                    Dealer = _dealer
+                    Dealer = _dealer,
+                    Hand = _dealer.Hand
                 });
 
             }

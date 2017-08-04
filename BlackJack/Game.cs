@@ -9,16 +9,8 @@ namespace BlackJack
 {
     public class Game
     {
-        //PlayerAccount: Amount for the game = 500
-        //PlayerBet: Amount for the round, comes out of PlayerAccount (must be equal to or less), at the end of the round the players bet will either be lost, unchanged, or more. 
-        //The playerBet amount after the round will be added to PlayerAccount if they win or draw. Otherwise, PlayerAccount remains the same.
-        //PlayerBet amount will change or not based on the player roundPayout result
-        //Round Payouts: BlackJack on first two cards = 3:2 win unless the Dealer also has a BlackJack then it's a tie, Win/Lose 1:1, Push/Tie - no money exchanged
-        //Split becomes two separate bets half of the original bet. Each hand can win/lose or tie. Combination of the results will factor into player's total bank account.
+         
         //NOTE:If the player's SplitHand has 21 but the dealer has a blackjack the player will still lose to the dealer in this case. 
-        //End round: if yes - end game, if no repeat round.
-
-        //End game: Total left in bank after all round/s completed - Player will be offered after each round whether to quit or continue
         
         private HumanPlayer _player;
         private IDeck _deck;
@@ -27,6 +19,7 @@ namespace BlackJack
         public event Func<OnRoundBetArgs, Int32> OnRoundBet;
         public event Action<OnRoundStartArgs> OnRoundStart;
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
+        public event Func<OnRoundDoubleArgs, DoubleAction> OnRoundDouble;
         public event Func<OnRoundTurnDecisionArgs, TurnAction> OnRoundTurnDecision;
         public event Action<OnRoundTurnStartArgs> OnRoundTurnStart;
         public event Action<OnRoundDealArgs> OnRoundDeal;
@@ -59,9 +52,18 @@ namespace BlackJack
                     OnRoundStart(ev);
                 };
 
-                round.OnRoundSplit += (ev) =>
+                round.OnRoundDouble += (ev) =>
                 {
                     _player.Account = _player.Account - playerBet;
+                    return OnRoundDouble(ev);
+                };
+
+                round.OnRoundSplit += (ev) =>
+                {
+                    if (ev.Player.IsSplit)
+                    {
+                        _player.Account = _player.Account - playerBet;
+                    }
                     return OnRoundSplit(ev);
                 };
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlackJack
 {
-    //Doubling down: Is allowed straight after the first two cards are dealt - The player will get one more card. They cannot ask for any more hits after this third card.
+    //Doubling down: Is allowed straight after the first two cards are dealt - The player will get one more card. They cannot ask for any more hits after this third card. Bet doubles.
     //Surrender: Is when the dealers first card is either an Ace or a 10 value - A player who surrenders gives half their bet to the house. The round ends and a new round starts.
     //Insurance: When the dealers first card is an Ace - The player can 'take insurance' against the chance that the dealer has blackjack.
     
@@ -38,7 +38,7 @@ namespace BlackJack
                 new HumanPlayer(Console.ReadLine(), 500),
                 new MockDeck(
                     new Card(Suit.Diamonds, Face.Eight),
-                    new Card(Suit.Clubs, Face.Eight),
+                    new Card(Suit.Clubs, Face.Three),
                     new Card(Suit.Clubs, Face.Eight),
                     new Card(Suit.Clubs, Face.Ten),
                     new Card(Suit.Hearts, Face.Eight),
@@ -69,6 +69,25 @@ namespace BlackJack
                 Console.WriteLine("The total is " + ev.Dealer.Hand.Value);
             };
 
+            game.OnRoundDouble += (ev) =>
+            {
+                Console.WriteLine();
+                Console.WriteLine("Would you like to double down?");
+                string userInput = Console.ReadLine();
+
+                if (userInput == "Yes")
+                {
+                    Console.WriteLine("You doubled your bet! Your account balance is now: " + ev.Player.Account);
+                    return DoubleAction.Yes;
+                }
+                else if (userInput == "No")
+                {
+                    return DoubleAction.No;
+                }
+
+                throw new Exception("TODO: Need to handle bad input from user");
+            };
+
             game.OnRoundSplit += (ev) =>
             {
                 Console.WriteLine();
@@ -80,6 +99,7 @@ namespace BlackJack
                     Console.WriteLine("You doubled your bet! Your account balance is now: " + ev.Player.Account);
                     return SplitAction.Yes;
                 }
+
                 else if (userInput == "No")
                 {
                     return SplitAction.No;
@@ -129,17 +149,17 @@ namespace BlackJack
 
             game.OnRoundDeal += (ev) =>
             {
-                Console.WriteLine();
-                PrintHand(ev.Player, ev.Hand);
                 if (ev.Player != null)
                 {
+                    Console.WriteLine();
+                    PrintHand(ev.Player, ev.Hand);
+                    string handName = null;
                     if (!ev.Player.IsSplit)
                     {
-                        Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Hand.Value);
+                        handName = "hand";
                     }
 
-                    string handName = null;
-                    if (ev.Hand.IsSplit)
+                    else if (ev.Hand.IsSplit)
                     {
                         handName = "second hand";
                     }
@@ -151,30 +171,30 @@ namespace BlackJack
                 }
                 else
                 {
+                    PrintHand(ev.Dealer, ev.Hand);
                     Console.WriteLine("The total for " + ev.Dealer.Name + "'s hand stays as " + ev.Hand.Value);
                 }
             };
 
             game.OnRoundStay += (ev) =>
             {
-                Console.WriteLine();
-                if(ev.Player != null)
+                if (ev.Player != null)
                 {
-                    if(!ev.Player.IsSplit)
-                    {
-                        Console.WriteLine("The total for " + ev.Player.Name + "'s hand is " + ev.Hand.Value);
-                    }
-
                     string handName = null;
-                    if (ev.Hand.IsSplit)
+                    if (!ev.Player.IsSplit)
+                    {
+                        handName = "hand";
+                    }
+                
+                    else if (ev.Hand.IsSplit)
                     {
                         handName = "second hand";
                     }
                     else
                     {
                         handName = "first hand";
+                        
                     }
-
                     Console.WriteLine("The total for " + ev.Player.Name + "'s " + handName + " stays as " + ev.Hand.Value);
                 }
                 else
@@ -283,11 +303,19 @@ namespace BlackJack
 
         private static void PrintHand(Player player, Hand hand)
         {
-
             string handName = null;
-            if (hand.IsSplit)
+            if (player is HumanPlayer)
             {
-                handName = "other hand";
+                HumanPlayer humanPlayer = (HumanPlayer)player;
+
+                if (hand.IsSplit)
+                {
+                    handName = "other hand";
+                }
+                else
+                {
+                    handName = "hand";
+                }
             }
             else
             {

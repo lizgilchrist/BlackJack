@@ -45,6 +45,8 @@
     <Compile Include="Card.cs" />
     <Compile Include="DealerPlayer.cs" />
     <Compile Include="Deck.cs" />
+    <Compile Include="DoubleAction.cs" />
+    <Compile Include="Events\OnRoundDoubleArgs.cs" />
     <Compile Include="Events\OnRoundBetArgs.cs" />
     <Compile Include="Events\OnRoundBustArgs.cs" />
     <Compile Include="Events\OnRoundEndArgs.cs" />
