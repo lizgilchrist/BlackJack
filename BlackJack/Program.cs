@@ -77,6 +77,7 @@ namespace BlackJack
 
                 if (userInput == "Yes")
                 {
+                    Console.WriteLine("You doubled your bet! Your account balance is now: " + ev.Player.Account);
                     return SplitAction.Yes;
                 }
                 else if (userInput == "No")

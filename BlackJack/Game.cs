@@ -61,7 +61,7 @@ namespace BlackJack
 
                 round.OnRoundSplit += (ev) =>
                 {
-                    playerBet = playerBet / 2;
+                    _player.Account = _player.Account - playerBet;
                     return OnRoundSplit(ev);
                 };
 
