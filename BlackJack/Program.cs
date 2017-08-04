@@ -208,23 +208,27 @@ namespace BlackJack
             {
                 if (ev.Player == null)
                 {
-                    Console.WriteLine(ev.Dealer + "'s hand is BUST!");
+                    Console.WriteLine(ev.Dealer.Name + "'s hand is BUST!");
+                    
                 }
                 if (ev.Dealer == null)
                 {
                     if(!ev.Player.IsSplit)
                     {
                         Console.WriteLine(ev.Player.Name + "'s hand is BUST!");
+                        
                     }
                     else
                     {
                         if(ev.BustHand == ev.Player.Hand)
                         {
                             Console.WriteLine(ev.Player.Name + "'s first hand is BUST!");
+                          
                         }
                         else
                         {
                             Console.WriteLine(ev.Player.Name + "'s second hand is BUST!");
+                         
                         }
                     }
                 }

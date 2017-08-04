@@ -226,8 +226,9 @@ namespace BlackJack
                 OnRoundBust(new OnRoundBustArgs()
                 {
                     Dealer = _dealer,
-                    BustHand = _dealer.Hand
+                    BustHand = _dealer.Hand,
                 });
+                
             }
 
             ResolveRoundResult(_player.Hand);
@@ -243,19 +244,31 @@ namespace BlackJack
         {
             HandResult result = HandResult.Unknown;
 
-            if (_dealer.Hand.Value > hand.Value)
+            if (hand.IsBust)
             {
                 result = HandResult.Lose;
             }
-            else if (_dealer.Hand.Value < hand.Value)
+            else if(_dealer.Hand.IsBust)
             {
                 result = HandResult.Win;
             }
-            else
-            {
-                result = HandResult.Tie;
-            }
 
+            if(!hand.IsBust && !_dealer.Hand.IsBust)
+            {
+                if (_dealer.Hand.Value > hand.Value)
+                {
+                    result = HandResult.Lose;
+                }
+                else if (_dealer.Hand.Value < hand.Value)
+                {
+                    result = HandResult.Win;
+                }
+                else
+                {
+                    result = HandResult.Tie;
+                }
+            }
+           
             OnRoundHandResult(new OnRoundHandResultArgs()
             {
                 Result = result,
