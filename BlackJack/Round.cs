@@ -24,6 +24,7 @@ namespace BlackJack
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
         public event Action<OnRoundIfSplitArgs> OnRoundIfSplit;
         public event Func<OnRoundDoubleArgs, DoubleAction> OnRoundDouble;
+        public event Action<OnRoundIfDoubleArgs> OnRoundIfDouble;
         public event Action<OnRoundTurnStartArgs> OnRoundTurnStart;
         public event Func<OnRoundTurnDecisionArgs, TurnAction> OnRoundTurnDecision;
         public event Action<OnRoundDealArgs> OnRoundDeal;
@@ -59,8 +60,6 @@ namespace BlackJack
                     });    
                 }
             }
-
-            
 
             List<Card> cards = _player.Hand.GetCards();
             if (cards[0].Face == cards[1].Face)
@@ -257,6 +256,11 @@ namespace BlackJack
 
                 if (doubleAction == DoubleAction.Yes)
                 {
+                    OnRoundIfDouble(new OnRoundIfDoubleArgs()
+                    {
+                        Player = _player
+                    });
+
                     isDouble = true;
                     _player.Hand.AddCard(_deck.GetNextCard());
                     OnRoundDeal(new OnRoundDealArgs()

@@ -21,6 +21,7 @@ namespace BlackJack
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
         public event Action<OnRoundIfSplitArgs> OnRoundIfSplit;
         public event Func<OnRoundDoubleArgs, DoubleAction> OnRoundDouble;
+        public event Action<OnRoundIfDoubleArgs> OnRoundIfDouble;
         public event Func<OnRoundTurnDecisionArgs, TurnAction> OnRoundTurnDecision;
         public event Action<OnRoundTurnStartArgs> OnRoundTurnStart;
         public event Action<OnRoundDealArgs> OnRoundDeal;
@@ -55,8 +56,15 @@ namespace BlackJack
 
                 round.OnRoundDouble += (ev) =>
                 {
-                    _player.Account = _player.Account - playerBet;
                     return OnRoundDouble(ev);
+                };
+
+                round.OnRoundIfDouble += (ev) =>
+                {
+                    _player.Account = _player.Account - playerBet;
+                    playerBet = playerBet * 2;
+                    OnRoundIfDouble?.Invoke(ev);
+
                 };
 
                 round.OnRoundSplit += (ev) =>
