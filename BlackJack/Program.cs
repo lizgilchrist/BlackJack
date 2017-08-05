@@ -38,7 +38,7 @@ namespace BlackJack
                 new HumanPlayer(Console.ReadLine(), 500),
                 new MockDeck(
                     new Card(Suit.Diamonds, Face.Eight),
-                    new Card(Suit.Clubs, Face.Three),
+                    new Card(Suit.Clubs, Face.Eight),
                     new Card(Suit.Clubs, Face.Eight),
                     new Card(Suit.Clubs, Face.Ten),
                     new Card(Suit.Hearts, Face.Eight),
@@ -96,7 +96,6 @@ namespace BlackJack
 
                 if (userInput == "Yes")
                 {
-                    Console.WriteLine("You doubled your bet! Your account balance is now: " + ev.Player.Account);
                     return SplitAction.Yes;
                 }
 
@@ -108,6 +107,10 @@ namespace BlackJack
                 throw new Exception("TODO: Need to handle bad input from user");
             };
 
+            game.OnRoundIfSplit += (ev) =>
+            {
+                Console.WriteLine("You doubled your bet! Your account balance is now: " + ev.Player.Account);
+            };
 
             game.OnRoundTurnStart += (ev) =>
             {

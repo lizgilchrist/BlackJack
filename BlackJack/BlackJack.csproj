@@ -53,6 +53,7 @@
     <Compile Include="Events\OnRoundHandResultArgs.cs" />
     <Compile Include="Events\OnRoundDealArgs.cs" />
     <Compile Include="Events\OnRoundHoleCardRevealArgs.cs" />
+    <Compile Include="Events\OnRoundIfSplitArgs.cs" />
     <Compile Include="Events\OnRoundSplitArgs.cs" />
     <Compile Include="Events\OnRoundStartArgs.cs" />
     <Compile Include="Events\OnRoundStayArgs.cs" />

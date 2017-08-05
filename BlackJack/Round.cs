@@ -22,6 +22,7 @@ namespace BlackJack
 
         public event Action<OnRoundStartArgs> OnRoundStart;
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
+        public event Action<OnRoundIfSplitArgs> OnRoundIfSplit;
         public event Func<OnRoundDoubleArgs, DoubleAction> OnRoundDouble;
         public event Action<OnRoundTurnStartArgs> OnRoundTurnStart;
         public event Func<OnRoundTurnDecisionArgs, TurnAction> OnRoundTurnDecision;
@@ -59,23 +60,7 @@ namespace BlackJack
                 }
             }
 
-            if(_player.Hand.Value <= 11)
-            {
-                DoubleAction doubleAction = OnRoundDouble(new OnRoundDoubleArgs()
-                {
-                    Player = _player
-                });
-
-                if(doubleAction == DoubleAction.Yes)
-                {
-                    _player.Hand.AddCard(_deck.GetNextCard());
-                    OnRoundDeal(new OnRoundDealArgs()
-                    {
-                        Player = _player,
-                        Hand = _player.Hand
-                    });
-                }
-            }
+            
 
             List<Card> cards = _player.Hand.GetCards();
             if (cards[0].Face == cards[1].Face)
@@ -87,8 +72,13 @@ namespace BlackJack
 
                 if (splitAction == SplitAction.Yes)
                 {
-                    _player.SplitHand = _player.Hand.Split();
+                    OnRoundIfSplit(new OnRoundIfSplitArgs()
+                    {
+                        Player = _player
+                    });
 
+                    _player.SplitHand = _player.Hand.Split();
+                    
                     _player.Hand.AddCard(_deck.GetNextCard());
                     OnRoundDeal(new OnRoundDealArgs()
                     {
@@ -111,42 +101,11 @@ namespace BlackJack
                 List<Card> splitHandCards = _player.SplitHand.GetCards();
                 bool isSplitHandAce = splitHandCards[0].Face == Face.Ace;
 
-                if (_player.Hand.Value <= 11)
-                {
-                    DoubleAction doubleAction = OnRoundDouble(new OnRoundDoubleArgs()
-                    {
-                        Player = _player
-                    });
-
-                    if (doubleAction == DoubleAction.Yes)
-                    {
-                        _player.Hand.AddCard(_deck.GetNextCard());
-                        OnRoundDeal(new OnRoundDealArgs()
-                        {
-                            Player = _player,
-                            Hand = _player.Hand
-                        });
-
-                        _player.SplitHand.AddCard(_deck.GetNextCard());
-                        OnRoundDeal(new OnRoundDealArgs()
-                        {
-                            Player = _player,
-                            Hand = _player.SplitHand
-                        });
-                    }
-                    else
-                    {
-                        ResolvePlayerHand(_player.Hand);
-                        ResolvePlayerHand(_player.SplitHand);
-                    }
-                }
-
-                else if (!isFirstHandAce || !isSplitHandAce)
+                if (!isFirstHandAce || !isSplitHandAce)
                 {
                     ResolvePlayerHand(_player.Hand);
                     ResolvePlayerHand(_player.SplitHand);
                 }
-                
             }
 
             else
@@ -287,7 +246,28 @@ namespace BlackJack
                 Hand = hand 
             });
 
-            while (!hand.IsBust)
+            bool isDouble = false;
+
+            if (hand.Value <= 11)
+            {
+                DoubleAction doubleAction = OnRoundDouble(new OnRoundDoubleArgs()
+                {
+                    Player = _player
+                });
+
+                if (doubleAction == DoubleAction.Yes)
+                {
+                    isDouble = true;
+                    _player.Hand.AddCard(_deck.GetNextCard());
+                    OnRoundDeal(new OnRoundDealArgs()
+                    {
+                        Player = _player,
+                        Hand = _player.Hand
+                    });
+                }
+            }
+
+            while (!hand.IsBust && !isDouble)
             {
                 TurnAction turnAction = OnRoundTurnDecision(new OnRoundTurnDecisionArgs()
                 {
