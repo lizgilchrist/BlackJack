@@ -37,12 +37,14 @@ namespace BlackJack
             Game game = new Game(
                 new HumanPlayer(Console.ReadLine(), 500),
                 new MockDeck(
-                    new Card(Suit.Diamonds, Face.Eight),
+                    new Card(Suit.Diamonds, Face.Three),
                     new Card(Suit.Clubs, Face.Three),
                     new Card(Suit.Clubs, Face.Eight),
                     new Card(Suit.Clubs, Face.Ten),
                     new Card(Suit.Hearts, Face.Eight),
-                    new Card(Suit.Hearts, Face.Ten)));
+                    new Card(Suit.Hearts, Face.Seven),
+                    new Card(Suit.Diamonds, Face.Six),
+                    new Card(Suit.Hearts, Face.Nine)));
 
             game.OnRoundBet += (ev) =>
             {
