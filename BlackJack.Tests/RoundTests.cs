@@ -49,19 +49,13 @@ namespace BlackJack.Tests
             bool onRoundHitTriggered = false;
             round.OnRoundDeal += (ev) =>
             {
-                if (ev.Player.Name == "Player")
-                {
                     onRoundHitTriggered = true;
-                }
             };
 
             bool onRoundStayTriggered = false;
             round.OnRoundStay += (ev) =>
             {
-                if (ev.Player.Name == "Player")
-                {
                     onRoundStayTriggered = true;
-                }
             };
 
             round.Start();
@@ -132,6 +126,9 @@ namespace BlackJack.Tests
             Round round = new Round(new HumanPlayer("Player", 500), deck);
             round.OnRoundStart += (ev) => { };
             round.OnRoundSplit += (ev) => { return SplitAction.No; };
+            round.OnRoundDouble += (ev) => { return DoubleAction.No; };
+            round.OnRoundIfDouble += (ev) => { };
+            round.OnRoundTurnStart += (ev) => { };
             round.OnRoundDeal += (ev) => { };
             round.OnRoundStay += (ev) => { };
             round.OnRoundBust += (ev) => { };
