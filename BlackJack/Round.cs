@@ -258,15 +258,16 @@ namespace BlackJack
                 {
                     OnRoundIfDouble(new OnRoundIfDoubleArgs()
                     {
-                        Player = _player
+                        Player = _player,
+                        Hand = hand
                     });
 
                     isDouble = true;
-                    _player.Hand.AddCard(_deck.GetNextCard());
+                    hand.AddCard(_deck.GetNextCard());
                     OnRoundDeal(new OnRoundDealArgs()
                     {
                         Player = _player,
-                        Hand = _player.Hand
+                        Hand = hand
                     });
                 }
             }

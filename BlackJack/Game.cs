@@ -9,7 +9,6 @@ namespace BlackJack
 {
     public class Game
     {
-         
         //NOTE:If the player's SplitHand has 21 but the dealer has a blackjack the player will still lose to the dealer in this case. 
         
         private HumanPlayer _player;
@@ -39,14 +38,16 @@ namespace BlackJack
 
         public void Start()
         {
-            int playerBet = OnRoundBet(new OnRoundBetArgs()
-            {
-                Player = _player
-            });
-            _player.Account =_player.Account - playerBet;
 
             while (true)
             {
+                int handBet = OnRoundBet(new OnRoundBetArgs()
+                {
+                    Player = _player
+                });
+                int splitHandBet = handBet;
+                _player.Account = _player.Account - handBet;
+
                 Round round = new Round(_player, _deck);
 
                 round.OnRoundStart += (ev) =>
@@ -61,10 +62,18 @@ namespace BlackJack
 
                 round.OnRoundIfDouble += (ev) =>
                 {
-                    _player.Account = _player.Account - playerBet;
-                    playerBet = playerBet * 2;
-                    OnRoundIfDouble?.Invoke(ev);
+                    _player.Account = _player.Account - handBet;
 
+                    if (ev.Hand.IsSplit)
+                    {
+                        splitHandBet = splitHandBet * 2;
+                    }
+                    else
+                    {
+                        handBet = handBet * 2;
+                    }
+                    
+                    OnRoundIfDouble?.Invoke(ev);
                 };
 
                 round.OnRoundSplit += (ev) =>
@@ -74,7 +83,7 @@ namespace BlackJack
 
                 round.OnRoundIfSplit += (ev) =>
                 {
-                    _player.Account = _player.Account - playerBet;
+                    _player.Account = _player.Account - handBet;
                     OnRoundIfSplit?.Invoke(ev);
                 };
 
@@ -110,17 +119,27 @@ namespace BlackJack
 
                 round.OnRoundHandResult += (ev) =>
                 {
+                    int bet = 0;
+                    if(ev.Hand.IsSplit)
+                    {
+                        bet = splitHandBet;
+                    }
+                    else
+                    {
+                        bet = handBet;
+                    }
+
                     if(ev.Result == HandResult.BlackJack)
                     {
-                        _player.Account = _player.Account + (int)(playerBet * 2.5); 
+                        _player.Account = _player.Account + (int)(bet * 2.5); 
                     }
                     else if (ev.Result == HandResult.Tie)
                     {
-                        _player.Account = _player.Account + playerBet;
+                        _player.Account = _player.Account + bet;
                     }
                     else if (ev.Result == HandResult.Win)
                     {
-                         _player.Account = _player.Account + playerBet * 2;
+                         _player.Account = _player.Account + bet * 2;
                     }
 
                     OnRoundHandResult(ev);

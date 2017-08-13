@@ -9,5 +9,7 @@ namespace BlackJack.Events
     public class OnRoundIfDoubleArgs
     {
         public HumanPlayer Player { get; set; }
+
+        public Hand Hand { get; set; }
     }
 }

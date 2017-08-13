@@ -41,6 +41,11 @@ namespace BlackJack.Tests
         {
             Round round = CreateRound(new Deck());
 
+            round.OnRoundSplit += (ev) =>
+            {
+                return SplitAction.No;
+            };
+
             round.OnRoundTurnDecision += (ev) =>
             {
                 return TurnAction.Stay;

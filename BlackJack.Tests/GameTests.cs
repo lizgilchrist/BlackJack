@@ -362,7 +362,7 @@ namespace BlackJack.Tests
         }
 
         [Fact]
-        public void TestPlayerSplitDoubleWinOtherHandTies()
+        public void TestPlayerSplitDoubleActionHandWinsOtherHandTies()
         {
             var game = CreateGame(new MockDeck(
                 new Card(Suit.Spades, Face.Eight),
@@ -370,6 +370,46 @@ namespace BlackJack.Tests
                 new Card(Suit.Hearts, Face.Ten),
                 new Card(Suit.Hearts, Face.Three),
                 new Card(Suit.Hearts, Face.Ten),
+                new Card(Suit.Diamonds, Face.Jack),
+                new Card(Suit.Hearts, Face.Eight)
+                ));
+
+            game.OnRoundSplit += ev =>
+            {
+                return SplitAction.Yes;
+            };
+
+            game.OnRoundDouble += ev =>
+            {
+                return DoubleAction.Yes;
+            };
+
+            game.OnRoundTurnDecision += ev =>
+            {
+                return TurnAction.Stay;
+            };
+
+            int? account = null;
+
+            game.OnRoundHandResult += ev =>
+            {
+                account = ev.Player.Account;
+            };
+
+            game.Start();
+
+            Assert.Equal(700, account);
+        }
+
+        [Fact]
+        public void TestPlayerSplitDoubleHandTiesSplitHandDoubles()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Spades, Face.Eight),
+                new Card(Suit.Hearts, Face.Eight),
+                new Card(Suit.Hearts, Face.Ten),
+                new Card(Suit.Hearts, Face.Ten),
+                new Card(Suit.Hearts, Face.Three),
                 new Card(Suit.Diamonds, Face.Jack),
                 new Card(Suit.Hearts, Face.Eight)
                 ));
