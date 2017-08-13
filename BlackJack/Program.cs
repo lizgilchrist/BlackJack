@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace BlackJack
 {
-    //Doubling down: Is allowed straight after the first two cards are dealt - The player will get one more card. They cannot ask for any more hits after this third card. Bet doubles.
     //Surrender: Is when the dealers first card is either an Ace or a 10 value - A player who surrenders gives half their bet to the house. The round ends and a new round starts.
     //Insurance: When the dealers first card is an Ace - The player can 'take insurance' against the chance that the dealer has blackjack.
     
@@ -32,19 +31,19 @@ namespace BlackJack
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            
+
 
             Game game = new Game(
                 new HumanPlayer(Console.ReadLine(), 500),
                 new MockDeck(
-                    new Card(Suit.Diamonds, Face.Three),
-                    new Card(Suit.Clubs, Face.Three),
+                    new Card(Suit.Diamonds, Face.Eight),
                     new Card(Suit.Clubs, Face.Eight),
                     new Card(Suit.Clubs, Face.Ten),
-                    new Card(Suit.Hearts, Face.Eight),
-                    new Card(Suit.Hearts, Face.Seven),
-                    new Card(Suit.Diamonds, Face.Six),
-                    new Card(Suit.Hearts, Face.Nine)));
+                    new Card(Suit.Clubs, Face.Three),
+                    new Card(Suit.Hearts, Face.Ten),
+                    new Card(Suit.Hearts, Face.Jack),
+                    new Card(Suit.Diamonds, Face.Eight)
+                    ));
 
             game.OnRoundBet += (ev) =>
             {
