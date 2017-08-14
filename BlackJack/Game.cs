@@ -41,12 +41,13 @@ namespace BlackJack
 
             while (true)
             {
-                int handBet = OnRoundBet(new OnRoundBetArgs()
+                int originalBet = OnRoundBet(new OnRoundBetArgs()
                 {
                     Player = _player
                 });
-                int splitHandBet = handBet;
-                _player.Account = _player.Account - handBet;
+                int handBet = originalBet;
+                int splitHandBet = originalBet;
+                _player.Account = _player.Account - originalBet;
 
                 Round round = new Round(_player, _deck);
 
@@ -62,7 +63,7 @@ namespace BlackJack
 
                 round.OnRoundIfDouble += (ev) =>
                 {
-                    _player.Account = _player.Account - handBet;
+                    _player.Account = _player.Account - originalBet;
 
                     if (ev.Hand.IsSplit)
                     {
@@ -70,7 +71,7 @@ namespace BlackJack
                     }
                     else
                     {
-                        handBet = handBet * 2;
+                        handBet = originalBet * 2;
                     }
                     
                     OnRoundIfDouble?.Invoke(ev);
@@ -83,7 +84,7 @@ namespace BlackJack
 
                 round.OnRoundIfSplit += (ev) =>
                 {
-                    _player.Account = _player.Account - handBet;
+                    _player.Account = _player.Account - originalBet;
                     OnRoundIfSplit?.Invoke(ev);
                 };
 

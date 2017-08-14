@@ -441,6 +441,43 @@ namespace BlackJack.Tests
             Assert.Equal(700, account);
         }
 
+        [Fact]
+        public void TestPlayerSplitDoublesBothHandsWins()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Spades, Face.Eight),
+                new Card(Suit.Hearts, Face.Eight),
+                new Card(Suit.Hearts, Face.Ten),
+                new Card(Suit.Hearts, Face.Three),
+                new Card(Suit.Hearts, Face.Three),
+                new Card(Suit.Diamonds, Face.Jack),
+                new Card(Suit.Hearts, Face.Queen),
+                new Card(Suit.Hearts, Face.Eight)
+                ));
+
+            game.OnRoundSplit += ev =>
+            {
+                return SplitAction.Yes;
+            };
+
+            game.OnRoundDouble += ev =>
+            {
+                return DoubleAction.Yes;
+            };
+
+            int? account = null;
+
+            game.OnRoundHandResult += ev =>
+            {
+                account = ev.Player.Account;
+            };
+
+            game.Start();
+
+            Assert.Equal(900, account);
+        }
+
+
         private Game CreateGame(IDeck deck)
         {
             Game game = new Game(new HumanPlayer("Player", 500), deck);
