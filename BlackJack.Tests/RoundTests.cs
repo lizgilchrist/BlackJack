@@ -12,7 +12,13 @@ namespace BlackJack.Tests
         [Fact]
         public void HitTriggersHitEvent()
         {
-            Round round = CreateRound(new Deck());
+            Round round = CreateRound(new MockDeck(
+                new Card(Suit.Clubs, Face.King),
+                new Card(Suit.Clubs, Face.Two),
+                new Card(Suit.Diamonds, Face.Eight),
+                new Card(Suit.Clubs, Face.King),
+                new Card(Suit.Clubs, Face.King)
+                ));
 
             round.OnRoundTurnDecision += (ev) =>
             {
@@ -39,7 +45,12 @@ namespace BlackJack.Tests
         [Fact]
         public void StayTriggeredStayEvent()
         {
-            Round round = CreateRound(new Deck());
+            Round round = CreateRound(new MockDeck(
+                new Card(Suit.Clubs, Face.King),
+                new Card(Suit.Clubs, Face.King),
+                new Card(Suit.Clubs, Face.King),
+                new Card(Suit.Clubs, Face.King)
+                ));
 
             round.OnRoundSplit += (ev) =>
             {

@@ -48,7 +48,7 @@ namespace BlackJack
                 Dealer = _dealer
             });
 
-            if (_player.Hand.Value == 21)
+            if (_player.HasBlackjack)
             {
                 if(_dealer.Hand.Value < 10)
                 {
@@ -140,53 +140,48 @@ namespace BlackJack
                 HoleCard = holeCard
             });
 
-            if(_dealer.Hand.Value == 21 && _player.Hand.Value == 21)
+            if (_dealer.HasBlackjack)
             {
-                OnRoundHandResult(new OnRoundHandResultArgs()
+                if (_player.HasBlackjack)
                 {
-                    Hand = _player.Hand,
-                    Player = _player,
-                    Result = HandResult.Tie
-                });
+                    OnRoundHandResult(new OnRoundHandResultArgs()
+                    {
+                        Hand = _player.Hand,
+                        Player = _player,
+                        Result = HandResult.Tie
+                    });
+                }
             }
-            else if(_dealer.Hand.Value == 21)
-            {
-                OnRoundHandResult(new OnRoundHandResultArgs()
-                {
-                    Hand = _player.Hand,
-                    Player = _player,
-                    Result = HandResult.Lose
-                });
-            }
-            
-            while (_dealer.Hand.Value < 17 && _dealer.Hand.Value < _player.Hand.Value)
-            {
-                _dealer.Hand.AddCard(_deck.GetNextCard());
-                OnRoundDeal(new OnRoundDealArgs()
-                {
-                    Dealer = _dealer,
-                    Hand = _dealer.Hand
-                });
-
-            }
-
-            if (!_dealer.Hand.IsBust)
-            {
-                OnRoundStay(new OnRoundStayArgs()
-                {
-                    Dealer = _dealer,
-                    Hand = _dealer.Hand
-                });
-            }
-
             else
             {
-                OnRoundBust(new OnRoundBustArgs()
+                while (_dealer.Hand.Value < 17 && _dealer.Hand.Value < _player.Hand.Value)
                 {
-                    Dealer = _dealer,
-                    BustHand = _dealer.Hand,
-                });
-                
+                    _dealer.Hand.AddCard(_deck.GetNextCard());
+                    OnRoundDeal(new OnRoundDealArgs()
+                    {
+                        Dealer = _dealer,
+                        Hand = _dealer.Hand
+                    });
+
+                }
+
+                if (!_dealer.Hand.IsBust)
+                {
+                    OnRoundStay(new OnRoundStayArgs()
+                    {
+                        Dealer = _dealer,
+                        Hand = _dealer.Hand
+                    });
+                }
+                else
+                {
+                    OnRoundBust(new OnRoundBustArgs()
+                    {
+                        Dealer = _dealer,
+                        BustHand = _dealer.Hand,
+                    });
+
+                }
             }
 
             ResolveRoundResult(_player.Hand);
@@ -223,7 +218,14 @@ namespace BlackJack
                 }
                 else
                 {
-                    result = HandResult.Tie;
+                    if (_dealer.HasBlackjack && _player.IsSplit)
+                    {
+                        result = HandResult.Lose;
+                    }
+                    else
+                    {
+                        result = HandResult.Tie;
+                    }
                 }
             }
            

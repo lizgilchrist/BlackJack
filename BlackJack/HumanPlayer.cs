@@ -41,6 +41,14 @@ namespace BlackJack
             }
         }
 
+        public override bool HasBlackjack
+        {
+            get
+            {
+                return !IsSplit && base.HasBlackjack;
+            }
+        }
+
         public HumanPlayer(string name, int account)
         {
             _name = name;

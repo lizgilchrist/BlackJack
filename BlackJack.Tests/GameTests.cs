@@ -254,6 +254,46 @@ namespace BlackJack.Tests
         }
 
         [Fact]
+        public void TestDealerWinsBlackJackPlayerSplitHandTwentyOne()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Clubs, Face.Eight),
+                new Card(Suit.Diamonds, Face.Eight),
+                new Card(Suit.Diamonds, Face.Ace),
+                new Card(Suit.Diamonds, Face.Three),
+                new Card(Suit.Hearts, Face.Ten),
+                new Card(Suit.Hearts, Face.Ten),
+                new Card(Suit.Diamonds, Face.Jack)
+                ));
+
+            game.OnRoundSplit += (ev) =>
+            {
+                return SplitAction.Yes;
+            };
+
+            game.OnRoundDouble += (ev) =>
+            {
+                return DoubleAction.Yes;
+            };
+
+            game.OnRoundTurnDecision += ev =>
+            {
+                return TurnAction.Stay;
+            };
+
+            int? account = null;
+
+            game.OnRoundHandResult += (ev) =>
+            {
+                account = ev.Player.Account;
+            };
+
+            game.Start();
+
+            Assert.Equal(200, account);
+        }
+
+        [Fact]
         public void TestRoundHandIsTie()
         {
             var game = CreateGame(new MockDeck(

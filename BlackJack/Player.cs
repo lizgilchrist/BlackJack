@@ -9,7 +9,15 @@ namespace BlackJack
     public abstract class Player
     {
         public Hand Hand { get; set; }
+
         public abstract string Name { get; }
 
+        public virtual bool HasBlackjack
+        {
+            get
+            {
+                return Hand.Value == 21 && Hand.GetCards().Count() == 2;
+            }
+        }
     }
 }
