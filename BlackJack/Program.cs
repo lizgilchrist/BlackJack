@@ -50,12 +50,21 @@ namespace BlackJack
                 Console.WriteLine("How much would you like to bet? (1 - " + ev.Player.Account + ")");
                 int playerBet = Convert.ToInt32(Console.ReadLine());
 
-                if (playerBet < ev.Player.Account)
+                while(playerBet > ev.Player.Account)
                 {
-                    return playerBet;
+                    Console.WriteLine("Sorry that's an invalid entry. Please try again.");
+                    int secondAttempt = Convert.ToInt32(Console.ReadLine());
+                    playerBet = secondAttempt;
                 }
 
-                throw new Exception("TODO: Need to handle bad input from user");
+                while (playerBet < 0)
+                {
+                    Console.WriteLine("Sorry you've entered a negative amount. Please try again.");
+                    int secondAttempt = Convert.ToInt32(Console.ReadLine());
+                    playerBet = secondAttempt;
+                }
+
+                return playerBet;
 
             };
             
