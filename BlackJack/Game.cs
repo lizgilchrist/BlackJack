@@ -9,7 +9,6 @@ namespace BlackJack
 {
     public class Game
     {
-        //NOTE:If the player's SplitHand has 21 but the dealer has a blackjack the player will still lose to the dealer in this case. 
         
         private HumanPlayer _player;
         private IDeck _deck;

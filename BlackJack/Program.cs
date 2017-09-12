@@ -75,12 +75,13 @@ namespace BlackJack
                 Console.WriteLine();
                 Console.WriteLine("Would you like to double down?");
                 string userInput = Console.ReadLine();
+                userInput = userInput.ToLower();
 
-                if (userInput == "Yes")
+                if (userInput == "yes")
                 {
                     return DoubleAction.Yes;
                 }
-                else if (userInput == "No")
+                else if (userInput == "no")
                 {
                     return DoubleAction.No;
                 }
@@ -99,13 +100,14 @@ namespace BlackJack
                 Console.WriteLine();
                 Console.WriteLine("Would you like to split?");
                 string userInput = Console.ReadLine();
+                userInput = userInput.ToLower();
 
-                if (userInput == "Yes")
+                if (userInput == "yes")
                 {
                     return SplitAction.Yes;
                 }
 
-                else if (userInput == "No")
+                else if (userInput == "no")
                 {
                     return SplitAction.No;
                 }
@@ -143,12 +145,13 @@ namespace BlackJack
                 Console.WriteLine();
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
                 string userInput = Console.ReadLine();
+                userInput = userInput.ToLower();
 
-                if (userInput == "Hit")
+                if (userInput == "hit")
                 {
                     return TurnAction.Hit;
                 }
-                else if (userInput == "Stay")
+                else if (userInput == "stay")
                 {
                     return TurnAction.Stay;
                 }
@@ -297,12 +300,13 @@ namespace BlackJack
                 Console.WriteLine();
                 Console.WriteLine("Do you wish to start a new round?");
                 string userInput = Console.ReadLine();
+                userInput = userInput.ToLower();
 
-                if(userInput == "Yes")
+                if(userInput == "yes")
                 {
                    return RoundEndAction.Continue;
                 }
-                else if(userInput == "No")
+                else if(userInput == "no")
                 {
                     return RoundEndAction.Quit;
                 }
