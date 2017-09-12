@@ -77,16 +77,22 @@ namespace BlackJack
                 string userInput = Console.ReadLine();
                 userInput = userInput.ToLower();
 
+                while (userInput != "yes" && userInput != "no")
+                {
+                    Console.WriteLine("Sorry, that's not a valid answer. Please try again.");
+                    string secondAttempt = Console.ReadLine();
+                    userInput = secondAttempt.ToLower();
+                }
+
                 if (userInput == "yes")
                 {
                     return DoubleAction.Yes;
                 }
-                else if (userInput == "no")
+                else
                 {
                     return DoubleAction.No;
                 }
-
-                throw new Exception("TODO: Need to handle bad input from user");
+                
             };
 
             game.OnRoundIfDouble += (ev) =>
@@ -102,17 +108,22 @@ namespace BlackJack
                 string userInput = Console.ReadLine();
                 userInput = userInput.ToLower();
 
+                while (userInput != "yes" && userInput != "no")
+                {
+                    Console.WriteLine("Sorry, that's not a valid answer. Please try again.");
+                    string secondAttempt = Console.ReadLine();
+                    userInput = secondAttempt.ToLower();
+                }
+
                 if (userInput == "yes")
                 {
                     return SplitAction.Yes;
                 }
-
-                else if (userInput == "no")
+                else
                 {
                     return SplitAction.No;
                 }
 
-                throw new Exception("TODO: Need to handle bad input from user");
             };
 
             game.OnRoundIfSplit += (ev) =>
@@ -147,16 +158,22 @@ namespace BlackJack
                 string userInput = Console.ReadLine();
                 userInput = userInput.ToLower();
 
+                while (userInput != "hit" && userInput != "stay")
+                {
+                    Console.WriteLine("Sorry, that's not a valid answer. Please try again.");
+                    string secondAttempt = Console.ReadLine();
+                    userInput = secondAttempt.ToLower();
+
+                }
+
                 if (userInput == "hit")
                 {
                     return TurnAction.Hit;
                 }
-                else if (userInput == "stay")
+                else
                 {
                     return TurnAction.Stay;
                 }
-
-                throw new Exception("TODO: Need to handle bad input from user");
             };
 
             game.OnRoundDeal += (ev) =>
@@ -302,16 +319,21 @@ namespace BlackJack
                 string userInput = Console.ReadLine();
                 userInput = userInput.ToLower();
 
-                if(userInput == "yes")
+                while (userInput != "yes" && userInput != "no")
+                {
+                    Console.WriteLine("Sorry, that's not a valid answer. Please try again.");
+                    string secondAttempt = Console.ReadLine();
+                    userInput = secondAttempt.ToLower();
+                }
+
+                if (userInput == "yes")
                 {
                    return RoundEndAction.Continue;
                 }
-                else if(userInput == "no")
+                else
                 {
                     return RoundEndAction.Quit;
                 }
-
-                throw new Exception("TODO: Need to handle bad input from user");
             };
 
             game.Start();
