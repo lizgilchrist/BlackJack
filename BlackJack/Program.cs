@@ -48,20 +48,27 @@ namespace BlackJack
             game.OnRoundBet += (ev) =>
             {
                 Console.WriteLine("How much would you like to bet? (1 - " + ev.Player.Account + ")");
-                int playerBet = Convert.ToInt32(Console.ReadLine());
-
-                while(playerBet > ev.Player.Account)
+                int playerBet = 0;
+                try
+                {
+                    playerBet = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    
+                }
+                
+                while(playerBet > ev.Player.Account || playerBet < 1)
                 {
                     Console.WriteLine("Sorry that's an invalid entry. Please try again.");
-                    int secondAttempt = Convert.ToInt32(Console.ReadLine());
-                    playerBet = secondAttempt;
-                }
+                    try
+                    {
+                        playerBet = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch (FormatException)
+                    {
 
-                while (playerBet < 0)
-                {
-                    Console.WriteLine("Sorry you've entered a negative amount. Please try again.");
-                    int secondAttempt = Convert.ToInt32(Console.ReadLine());
-                    playerBet = secondAttempt;
+                    }
                 }
 
                 return playerBet;
@@ -83,14 +90,12 @@ namespace BlackJack
             {
                 Console.WriteLine();
                 Console.WriteLine("Would you like to double down?");
-                string userInput = Console.ReadLine();
-                userInput = userInput.ToLower();
+                string userInput = Console.ReadLine().ToLower();
 
                 while (userInput != "yes" && userInput != "no")
                 {
                     Console.WriteLine("Sorry, that's not a valid answer. Please try again.");
-                    string secondAttempt = Console.ReadLine();
-                    userInput = secondAttempt.ToLower();
+                    userInput = Console.ReadLine().ToLower();
                 }
 
                 if (userInput == "yes")
@@ -114,14 +119,12 @@ namespace BlackJack
             {
                 Console.WriteLine();
                 Console.WriteLine("Would you like to split?");
-                string userInput = Console.ReadLine();
-                userInput = userInput.ToLower();
+                string userInput = Console.ReadLine().ToLower();
 
                 while (userInput != "yes" && userInput != "no")
                 {
                     Console.WriteLine("Sorry, that's not a valid answer. Please try again.");
-                    string secondAttempt = Console.ReadLine();
-                    userInput = secondAttempt.ToLower();
+                    userInput = Console.ReadLine().ToLower();
                 }
 
                 if (userInput == "yes")
@@ -164,15 +167,12 @@ namespace BlackJack
             {
                 Console.WriteLine();
                 Console.WriteLine("Please choose 'Hit' or 'Stay'? ");
-                string userInput = Console.ReadLine();
-                userInput = userInput.ToLower();
-
+                string userInput = Console.ReadLine().ToLower();
+                
                 while (userInput != "hit" && userInput != "stay")
                 {
                     Console.WriteLine("Sorry, that's not a valid answer. Please try again.");
-                    string secondAttempt = Console.ReadLine();
-                    userInput = secondAttempt.ToLower();
-
+                    userInput = Console.ReadLine().ToLower();
                 }
 
                 if (userInput == "hit")
@@ -325,14 +325,13 @@ namespace BlackJack
             {
                 Console.WriteLine();
                 Console.WriteLine("Do you wish to start a new round?");
-                string userInput = Console.ReadLine();
-                userInput = userInput.ToLower();
+                string userInput = Console.ReadLine().ToLower();
+                
 
                 while (userInput != "yes" && userInput != "no")
                 {
                     Console.WriteLine("Sorry, that's not a valid answer. Please try again.");
-                    string secondAttempt = Console.ReadLine();
-                    userInput = secondAttempt.ToLower();
+                    userInput = Console.ReadLine().ToLower();
                 }
 
                 if (userInput == "yes")
