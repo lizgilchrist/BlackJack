@@ -57,7 +57,14 @@ namespace BlackJack
 
                 round.OnRoundDouble += (ev) =>
                 {
-                    return OnRoundDouble(ev);
+                    if(originalBet < _player.Account)
+                    {
+                        return OnRoundDouble(ev);
+                    }
+                    else
+                    {
+                        return DoubleAction.No;
+                    }
                 };
 
                 round.OnRoundIfDouble += (ev) =>
@@ -78,7 +85,15 @@ namespace BlackJack
 
                 round.OnRoundSplit += (ev) =>
                 {
-                    return OnRoundSplit(ev);
+                    if (originalBet < _player.Account)
+                    {
+                        return OnRoundSplit(ev);
+                    }
+                    else
+                    {
+                        return SplitAction.No;
+                    }
+                 
                 };
 
                 round.OnRoundIfSplit += (ev) =>

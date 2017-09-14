@@ -517,6 +517,69 @@ namespace BlackJack.Tests
             Assert.Equal(900, account);
         }
 
+        [Fact]
+        public void TestPlayerIsNotOfferedSplitWithoutEnoughInAccount()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Spades, Face.Eight),
+                new Card(Suit.Hearts, Face.Eight),
+                new Card(Suit.Hearts, Face.Ten),
+                new Card(Suit.Clubs, Face.Four),
+                new Card(Suit.Clubs, Face.Five)
+                ));
+
+            game.OnRoundBet += (ev) =>
+            {
+                return 300;
+            };
+
+            bool onGameSplitTriggered = false;
+            game.OnRoundSplit += (ev) =>
+            {
+                onGameSplitTriggered = true;
+                return SplitAction.No;
+            };
+
+            game.Start();
+
+            Assert.False(onGameSplitTriggered);
+        }
+
+        [Fact]
+        public void TestPlayerIsNotOfferedDoubleWithoutEnoughInAccount()
+        {
+            var game = CreateGame(new MockDeck(
+                new Card(Suit.Spades, Face.Eight),
+                new Card(Suit.Hearts, Face.Eight),
+                new Card(Suit.Hearts, Face.Ten),
+                new Card(Suit.Clubs, Face.Three),
+                new Card(Suit.Clubs, Face.Five),
+                new Card(Suit.Hearts, Face.Six),
+                new Card(Suit.Spades, Face.Six),
+                new Card(Suit.Spades, Face.Seven)
+                ));
+
+            game.OnRoundBet += (ev) =>
+            {
+                return 200;
+            };
+
+            game.OnRoundSplit += (ev) =>
+            {
+                return SplitAction.Yes;
+            };
+
+            bool onGameDoubleTriggered = false;
+            game.OnRoundDouble += (ev) =>
+            {
+                onGameDoubleTriggered = true;
+                return DoubleAction.No;
+            };
+
+            game.Start();
+
+            Assert.False(onGameDoubleTriggered);
+        }
 
         private Game CreateGame(IDeck deck)
         {
