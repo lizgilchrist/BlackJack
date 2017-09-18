@@ -21,6 +21,8 @@ namespace BlackJack
         }
 
         public event Action<OnRoundStartArgs> OnRoundStart;
+        public event Func<OnRoundInsuranceArgs, InsuranceAction> OnRoundInsurance;
+        public event Action<OnRoundIfInsuranceArgs> OnRoundIfInsurance; 
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
         public event Action<OnRoundIfSplitArgs> OnRoundIfSplit;
         public event Func<OnRoundDoubleArgs, DoubleAction> OnRoundDouble;
@@ -58,6 +60,45 @@ namespace BlackJack
                         Player = _player,
                         Result = HandResult.BlackJack
                     });    
+                }
+            }
+
+            if(_dealer.Hand.Value == 11)
+            {
+                InsuranceAction insuranceAction = OnRoundInsurance(new OnRoundInsuranceArgs()
+                {
+                    Player = _player
+                });
+
+                if(insuranceAction == InsuranceAction.Yes)
+                {
+                    OnRoundIfInsurance(new OnRoundIfInsuranceArgs()
+                    {
+                        Player = _player
+                    });
+
+                    //Call DealersHoleCardReveal method...
+                    DealerHoleCardReveal();
+
+                    if (_dealer.HasBlackjack)
+                    {
+                        OnRoundHandResult(new OnRoundHandResultArgs()
+                        {
+                            Hand = _player.Hand,
+                            Player = _player,
+                            Result = HandResult.InsuranceBlackJack
+                        });
+                    }
+                    else
+                    {
+                        OnRoundHandResult(new OnRoundHandResultArgs()
+                        {
+                            Hand = _player.Hand,
+                            Player = _player,
+                            Result = HandResult.Lose
+                        });
+                    }
+                    return;
                 }
             }
 
@@ -132,13 +173,18 @@ namespace BlackJack
                 return;
             }
 
-            Card holeCard = _deck.GetNextCard();
+            //Copy this holeCardReveal into a method
+
+            DealerHoleCardReveal();
+
+            /*Card holeCard = _deck.GetNextCard();
             _dealer.Hand.AddCard(holeCard);
             OnRoundHoleCardReveal(new OnRoundHoleCardRevealArgs()
             {
                 Dealer = _dealer,
                 HoleCard = holeCard
             });
+            */
 
             if (_dealer.HasBlackjack)
             {
@@ -191,6 +237,17 @@ namespace BlackJack
                 ResolveRoundResult(_player.SplitHand);
             }
 
+        }
+
+        private void DealerHoleCardReveal()
+        {
+            Card holeCard = _deck.GetNextCard();
+            _dealer.Hand.AddCard(holeCard);
+            OnRoundHoleCardReveal(new OnRoundHoleCardRevealArgs()
+            {
+                Dealer = _dealer,
+                HoleCard = holeCard
+            });
         }
 
         private void ResolveRoundResult(Hand hand)

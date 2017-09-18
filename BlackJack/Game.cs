@@ -16,6 +16,8 @@ namespace BlackJack
        
         public event Func<OnRoundBetArgs, Int32> OnRoundBet;
         public event Action<OnRoundStartArgs> OnRoundStart;
+        public event Func<OnRoundInsuranceArgs, InsuranceAction> OnRoundInsurance;
+        public event Action<OnRoundIfInsuranceArgs> OnRoundIfInsurance;
         public event Func<OnRoundSplitArgs, SplitAction> OnRoundSplit;
         public event Action<OnRoundIfSplitArgs> OnRoundIfSplit;
         public event Func<OnRoundDoubleArgs, DoubleAction> OnRoundDouble;
@@ -53,6 +55,16 @@ namespace BlackJack
                 round.OnRoundStart += (ev) =>
                 {
                     OnRoundStart(ev);
+                };
+
+                round.OnRoundInsurance += (ev) =>
+                {
+                    return OnRoundInsurance(ev);
+                };
+
+                round.OnRoundIfInsurance += (ev) =>
+                {
+                    OnRoundIfInsurance?.Invoke(ev);
                 };
 
                 round.OnRoundDouble += (ev) =>
@@ -155,6 +167,10 @@ namespace BlackJack
                     else if (ev.Result == HandResult.Win)
                     {
                          _player.Account = _player.Account + bet * 2;
+                    }
+                    else if (ev.Result == HandResult.InsuranceBlackJack)
+                    {
+                        _player.Account = bet / 2 + _player.Account;
                     }
 
                     OnRoundHandResult(ev);

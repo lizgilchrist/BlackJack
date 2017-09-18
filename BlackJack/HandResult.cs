@@ -16,6 +16,8 @@ namespace BlackJack
 
         Tie, 
 
-        BlackJack
+        BlackJack,
+
+        InsuranceBlackJack
     }
 }

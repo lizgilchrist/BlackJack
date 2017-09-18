@@ -4,10 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlackJack.Events
+namespace BlackJack
 {
-    public class OnRoundEndArgs
+    public enum InsuranceAction
     {
-        public HumanPlayer Player { get; set; }
+        Unknown,
+
+        Yes,
+
+        No
     }
 }

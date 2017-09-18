@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BlackJack
 {
     //Surrender: Is when the dealers first card is either an Ace or a 10 value - A player who surrenders gives half their bet to the house. The round ends and a new round starts.
-    //Insurance: When the dealers first card is an Ace - The player can 'take insurance' against the chance that the dealer has blackjack.
+    //Insurance: When the dealers first card is an Ace - The player can 'take insurance' if the dealer has blackjack they will only lose half their bet.
     
     class Program
     {
@@ -38,8 +38,8 @@ namespace BlackJack
                 new MockDeck(
                     new Card(Suit.Diamonds, Face.Eight),
                     new Card(Suit.Clubs, Face.Eight),
-                    new Card(Suit.Clubs, Face.Ten),
-                    new Card(Suit.Clubs, Face.Three),
+                    new Card(Suit.Clubs, Face.Ace),
+                    new Card(Suit.Clubs, Face.Queen),
                     new Card(Suit.Hearts, Face.Ten),
                     new Card(Suit.Hearts, Face.Jack),
                     new Card(Suit.Diamonds, Face.Eight)
@@ -86,6 +86,28 @@ namespace BlackJack
                 Console.WriteLine("The total is " + ev.Dealer.Hand.Value);
             };
 
+            game.OnRoundInsurance += (ev) =>
+            {
+                Console.WriteLine();
+                Console.WriteLine("Would you like to take insurance?");
+                string userInput = Console.ReadLine().ToLower();
+
+                while (userInput != "yes" &&userInput != "no")
+                {
+                    Console.WriteLine("Sorry, that's not a valid answer. Please try again.");
+                    userInput = Console.ReadLine().ToLower();
+                }
+
+                if(userInput == "yes")
+                {
+                    return InsuranceAction.Yes;
+                }
+                else
+                {
+                    return InsuranceAction.No;
+                }
+            };
+
             game.OnRoundDouble += (ev) =>
             {
                 Console.WriteLine();
@@ -107,6 +129,11 @@ namespace BlackJack
                     return DoubleAction.No;
                 }
                 
+            };
+
+            game.OnRoundIfInsurance += (ev) =>
+            {
+                Console.WriteLine("You've taken insurance! This means you've forfeited half of your original bet! Lets hope the dealer has BlackJack!");
             };
 
             game.OnRoundIfDouble += (ev) =>
@@ -317,6 +344,10 @@ namespace BlackJack
                 else if(ev.Result == HandResult.BlackJack)
                 {
                     Console.WriteLine(ev.Player.Name + " WIN'S BLACKJACK!! Your account balance is now " + ev.Player.Account);
+                }
+                else if(ev.Result == HandResult.InsuranceBlackJack)
+                {
+                    Console.WriteLine(ev.Player.Name + ", the dealer did have BlackJack!! Your account balance is now " + ev.Player.Account);
                 }
 
             };

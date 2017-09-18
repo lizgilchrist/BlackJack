@@ -54,7 +54,9 @@
     <Compile Include="Events\OnRoundDealArgs.cs" />
     <Compile Include="Events\OnRoundHoleCardRevealArgs.cs" />
     <Compile Include="Events\OnRoundIfDoubleArgs.cs" />
+    <Compile Include="Events\OnRoundIfInsuranceArgs.cs" />
     <Compile Include="Events\OnRoundIfSplitArgs.cs" />
+    <Compile Include="Events\OnRoundInsuranceArgs.cs" />
     <Compile Include="Events\OnRoundSplitArgs.cs" />
     <Compile Include="Events\OnRoundStartArgs.cs" />
     <Compile Include="Events\OnRoundStayArgs.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Events\OnRoundTurnStartArgs.cs" />
     <Compile Include="Face.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="InsuranceAction.cs" />
     <Compile Include="Round.cs" />
     <Compile Include="HandResult.cs" />
     <Compile Include="Hand.cs" />
